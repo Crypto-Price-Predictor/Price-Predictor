@@ -1,15 +1,17 @@
 from flask import Flask, request, jsonify # type: ignore
+from flask_cors import CORS # type: ignore
 from fetch_data import fetch_data
 import numpy as np # type: ignore
 import joblib # type: ignore
 from train import forward
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET'])
 def predict():
-    layers = joblib.load('./models/model.pkl')
-    scaler_x = joblib.load('./models/scaler_x.pkl')
+    layers = joblib.load('../models/model.pkl')
+    scaler_x = joblib.load('../models/scaler_x.pkl')
     
     # Get data from the request
     data = fetch_data()

@@ -21,7 +21,6 @@ def init_params(layer_conf):
         return layers
 
 def create_model(k, layer_conf):
-    # k = 5  # Number of folds
     kf = KFold(n_splits=k, shuffle=True, random_state=42)
     layers = init_params(layer_conf)
     return kf, layers
