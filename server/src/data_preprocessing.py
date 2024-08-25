@@ -7,7 +7,6 @@ Predictors = ["Close", "Volume USDT"]
 Target = ["Close_tomorrow"]
 
 scaler_x = StandardScaler()
-# scaler_y = StandardScaler()
 
 def load_data(filepath):
     return pd.read_csv(filepath)
@@ -26,10 +25,10 @@ def preprocess_data(data):
     data = data.drop(columns = ["Unix", "Symbol"], axis=1)
     
     data[Predictors] = scaler_x.fit_transform(data[Predictors])
-    # Save the fitted scaler
-    joblib.dump(scaler_x, './models/scaler_x.pkl')
-    # data[Target] = scaler_y.fit_transform(data[Target])
     
+    # Save the fitted scaler
+    joblib.dump(scaler_x, './server/models/scaler_x.pkl')
+        
     return data
 
 def split_data(data):
@@ -45,7 +44,3 @@ def split_data(data):
     X = np.array(X)
     Y = np.array(Y)
     return X,Y
-
-
-# if __name__ == "__main__":
-#     scaler_x

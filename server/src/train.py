@@ -6,7 +6,7 @@ import pickle
 
 layer_conf = [
     {"type":"input", "units": 2},
-    {"type":"rnn", "hidden": 6, "output": 1}
+    {"type":"rnn", "hidden": 3, "output": 1}
 ]
 
 def mse(actual, predicted):
@@ -126,7 +126,7 @@ def train_model(filepath):
 
 
     # Save the trained model
-    joblib.dump(layers, './models/model.pkl')
+    joblib.dump(layers, './server/models/model.pkl')
 
 if __name__ == "__main__":
-    train_model('./data/Binance_SHIBUSDT_d.csv')
+    train_model('./server/data/Binance_SHIBUSDT_d.csv')
