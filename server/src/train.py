@@ -6,7 +6,7 @@ import pickle
 
 layer_conf = [
     {"type":"input", "units": 2},
-    {"type":"rnn", "hidden": 3, "output": 1}
+    {"type":"rnn", "hidden": 1, "output": 1}
 ]
 
 def mse(actual, predicted):
