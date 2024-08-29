@@ -1,15 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import loginButton from "./components/loginButton";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import Section1 from "./components/components/home_components/Section1";
 import Section2 from "./components/components/home_components/Section2";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [ischange, setIsChange] = useState(false);
   const handleLogin = async () => {
     const result = await signIn("google", { callbackUrl: "/User" });
 
@@ -18,6 +16,24 @@ export default function Home() {
       console.error("Login failed:", result.error);
     }
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition: number = window.scrollY;
+      if (scrollPosition > 100) {
+        setIsChange(true);
+      } else {
+        setIsChange(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-start justify-between">
@@ -29,7 +45,6 @@ export default function Home() {
             <Image
               src="/logo3.svg"
               alt="Logo"
-              // className="light:invert"
               width={250}
               height={50}
               priority
@@ -140,23 +155,27 @@ export default function Home() {
       </header>
       <div>
         <div className="flex flex-col">
-          <div className="flex-1">
-            <video autoPlay muted loop className='opacity-30 h-full '>
+          {!ischange ? (
+            <div>
+              <video autoPlay muted loop className="opacity-30 h-full ">
                 <source src="/video1.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <div className="flex-2 opacity-30">
-            <Image
+              </video>
+            </div>
+          ) : (
+            <div className="opacity-30 min-h-screen">
+              <Image
                 src="/background2.jpg"
-                alt=''
-                // layout="fill" 
-                // objectFit="cover" 
+                alt="Background"
+                sizes="cover"
+                // layout="fill"
+                // objectFit="cover"
                 layout="responsive"
-                width={500}
-                height={500}
+                width={1000}
+                height={1000}
                 priority
-            />
-          </div>
+              />
+            </div>
+          )}
         </div>
 
         <div className="absolute top-32">
