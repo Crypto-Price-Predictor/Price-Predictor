@@ -1,8 +1,22 @@
-"use Client";
+"use client";
 
 import Image from "next/image";
+import loginButton from "./components/loginButton";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const handleLogin = async () => {
+    const result = await signIn("google", { callbackUrl: "/User" });
+
+    // Check if the sign-in was successful
+    if (result?.error) {
+      console.error("Login failed:", result.error);
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-row items-start justify-between">
       {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"> */}
@@ -87,16 +101,15 @@ export default function Home() {
 
             <div className="flex items-end gap-4">
               <div className="sm:flex sm:gap-4">
-                <a
+                <button
                   className="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
-                  href="/login"
+                  onClick={handleLogin}
                 >
                   Login
-                </a>
-
+                </button>
                 <a
-                  className="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:text-teal-600/75 sm:block"
-                  href="#"
+                  className="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
+                  href="/api/auth/signin"
                 >
                   Register
                 </a>

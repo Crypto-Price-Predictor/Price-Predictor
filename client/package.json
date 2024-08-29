@@ -8,9 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^5.19.0",
     "apexcharts": "^3.52.0",
     "axios": "^1.7.5",
+    "googleapis": "^143.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
     "next": "^14.2.6",
+    "next-auth": "^4.24.7",
     "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1"
@@ -23,6 +28,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
     "postcss": "^8",
+    "prisma": "^5.19.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
