@@ -2,19 +2,54 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import ErrorModel from "../components/ErrorModel";
+import { signIn } from "next-auth/react";
 
-const login: React.FC = () => {
+const login = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string>("");
+  const [errorModelOpen, setErrorModelOpen] = useState(false);
   const navigate = useRouter();
 
-  const handleConfirm = (e: React.FormEvent) => {
+  const handleClose = () => {
+    setErrorModelOpen(false);
+  };
+
+  const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setError("");
+
     const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
     if (!emailPattern.test(mail)) {
-      alert("Please enter a valid email address.");
+      setError("Please enter a valid email address.");
+      setErrorModelOpen(true);
       return;
-    } else if (password === "1234" && mail === "anonimous@gmail.com") {
+    }
+
+    // const res = await fetch("/api/page", {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ mail, password }),
+    // });
+
+    // const data = await res.json();
+
+    // if (res.ok) {
+    //   // Save token and user details (e.g., in localStorage)
+    //   localStorage.setItem("token", data.token);
+    //   localStorage.setItem("user", JSON.stringify(data.user));
+
+    //   // Redirect to home page or another page
+    //   navigate.push("/User");
+    // } else {
+    //   setError(data.message);
+    //   setErrorModelOpen(true);
+    // }
+    else if (password === "1234" && mail === "anonimous@gmail.com") {
       navigate.push("/User");
     } else {
       window.location.reload();
@@ -130,6 +165,11 @@ const login: React.FC = () => {
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
+      <ErrorModel
+        isOpen={errorModelOpen}
+        onClose={handleClose}
+        massage={error}
+      />
     </section>
   );
 };
