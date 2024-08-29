@@ -13,13 +13,15 @@ const CurrSelecter: React.FC<currSelecterProps> = ({ handleChange }) => {
         className="h-12 bg-gray-700 hover:bg-gradient-to-r from-pink-600 to-purple-900 w-full max-w-xs rounded-lg"
         onChange={(e) => handleChange(e.target.value)}
       >
-        <option className="text-center" value={"bitcoin"}>
+        <option className="text-center" value={"BTC"}>
           Bitcoin (BTC)
         </option>
-        <option className="text-center">TRON (TRX)</option>
-        <option className="text-center">SOLANA (SOL) CMS</option>
+        <option className="text-center" value={"TRX"}>
+          TRON (TRX)
+        </option>
+        {/* <option className="text-center">SOLANA (SOL) CMS</option> */}
         <option className="text-center">Dogecoin (Doge)</option>
-        <option className="text-center" value={"shiba-inu"}>
+        <option className="text-center" value={"SHIB"}>
           Shiba-inu (SHIB)
         </option>
       </select>

@@ -11,41 +11,55 @@ import AboutStability from "../components/AboutStability";
 import axios from "axios";
 
 const Dashboard: React.FC = () => {
-  const [curr, setCurr] = useState("");
-  const [predictions, setPredictions] = useState<any>(null);
+  const [curr, setCurr] = useState("BTC");
+  const [predictions, setPredictions] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get("http://127.0.0.1:5000/predict"); // Adjust the endpoint as needed
-  //       setPredictions(response.data);
-  //       console.log(response.data);
-  //     } catch (err) {
-  //       setError("Error fetching predictions");
-  //       console.error(err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true); // Set loading to true at the start
+      setError(null);
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:5000/predict?coin=${curr}`
+        );
+        // Assuming the response contains a property 'predictions' which is an array
+        const data = response.data[0]; // Adjust based on your actual API response structure
+        setPredictions(data); // Ensure predictions is an array
+        console.log(data);
+      } catch (err) {
+        setError("Error fetching predictions");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchData();
-  // }, [curr]);
+    fetchData();
+  }, [curr]);
 
   const series = [
-    {
-      name: "Actual", // Name of the series
-      data: [23, 44, 56, 75, 56, 55, 60, 69], // Data points for the series
-    },
+    // {
+    //   name: "Actual", // Name of the series
+    //   data: [44000, 56000, 75000, 56000, 55000, 60000, 69000], // Data points for the series
+    // },
     {
       name: "Predict",
-      data: [36, 46, 60, 70, 60, 40, 60, 72],
+      data: predictions,
     },
   ];
 
   // Categories for the x-axis
-  const categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+  const categories = [
+    "Day 1",
+    "Day 2",
+    "Day 3",
+    "Day 4",
+    "Day 5",
+    "Day 6",
+    "Day 7",
+  ];
 
   //AboutPred parameters
   const parameters = [
@@ -57,14 +71,6 @@ const Dashboard: React.FC = () => {
 
   const handleCurrChange = async (curr: string) => {
     setCurr(curr);
-    try {
-      const response = await axios.get("http://127.0.0.1:5000/predict"); // Adjust the endpoint as needed
-      setPredictions(response.data);
-      console.log(response.data);
-    } catch (err) {
-      setError("Error fetching predictions");
-      console.error(err);
-    }
   };
 
   return (
@@ -78,7 +84,13 @@ const Dashboard: React.FC = () => {
             <TimeSelecter />
           </div>
           <div className="flex-grow">
-            <TopicGraph series={series} categories={categories} />
+            {loading ? (
+              <p>Loading predictions...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              <TopicGraph series={series} categories={categories} />
+            )}
           </div>
         </div>
 

@@ -1,46 +1,50 @@
 import pandas as pd # type: ignore
 import numpy as np # type: ignore
 import joblib # type: ignore
-from sklearn.preprocessing import StandardScaler # type: ignore
+from sklearn.preprocessing import MinMaxScaler,StandardScaler # type: ignore
 
-Predictors = ["Close", "Volume USDT"]
-Target = ["Close_tomorrow"]
-
-scaler_x = StandardScaler()
+scaler = MinMaxScaler()
 
 def load_data(filepath):
     return pd.read_csv(filepath)
 
 def preprocess_data(data):
+    data = data.ffill()
     data = data.iloc[::-1].reset_index(drop=True)
-    data["Open_tomorrow"] = data["Open"].shift(-1)
-    data["High_tomorrow"] = data["High"].shift(-1)
-    data["Low_tomorrow"] = data["Low"].shift(-1)
-    data["Close_tomorrow"] = data["Close"].shift(-1)
-    data["volumeS_tomorrow"] = data["Volume SHIB"].shift(-1)
-    data["volumeU_tomorrow"] = data["Volume USDT"].shift(-1)
-    data["trdcount_tomorrow"] = data["tradecount"].shift(-1)
-    data = data.dropna(subset=['Open_tomorrow'])
     data = data.set_index('Date')
     data = data.drop(columns = ["Unix", "Symbol"], axis=1)
-    
-    data[Predictors] = scaler_x.fit_transform(data[Predictors])
-    
-    # Save the fitted scaler
-    joblib.dump(scaler_x, './server/models/scaler_x.pkl')
+    data = data['Close']
         
     return data
 
-def split_data(data):
-    np.random.seed(0)
-    X = []
-    Y = []
-    sequence = 30
-    n = 7
-    for i in range(data.shape[0]- sequence - (n-1)):
-        X.append(data[Predictors].iloc[i:(i+sequence),:].values.reshape(sequence, 2))
-        Y.append(data[Target].iloc[i+(n-1):(i+sequence+n-1),:].values.reshape(sequence, 1))
+def create_dataset(dataset, look_back=1, n=0, future_steps=1):
+    dataX, dataY = [], []
+    for i in range(len(dataset) - look_back - future_steps - n):
+        a = dataset[i:(i + look_back), 0]
+        dataX.append(a)
+        dataY.append(dataset[i + look_back + n:i + look_back + n + future_steps, 0])
+    return np.array(dataX), np.array(dataY)
 
-    X = np.array(X)
-    Y = np.array(Y)
-    return X,Y
+def split_data(data, look_back, future_steps):
+    np.random.seed(0)
+
+    # Load the dataset
+    dataframe = data
+    dataset = dataframe.values
+    dataset = dataset.astype('float64').reshape(-1, 1)
+
+    dataset = scaler.fit_transform(dataset)
+    
+    joblib.dump(scaler, './server/models/scaler_TRX.pkl')
+
+    train_size = int(len(dataset) * 0.67)
+    train, test = dataset[0:train_size, :], dataset[train_size:len(dataset), :]
+
+    # Create dataset for multiple future steps
+    trainX, trainY = create_dataset(train, look_back, 3, future_steps)
+    testX, testY = create_dataset(test, look_back, 3, future_steps)
+
+    # Reshape input to be [samples, time steps, features]
+    trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+    testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+    return trainX,trainY,testX,testY
