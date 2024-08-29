@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Section1 from "./components/components/home_components/Section1";
+import Section2 from "./components/components/home_components/Section2";
 
 export default function Home() {
   const handleLogin = async () => {
@@ -18,9 +20,9 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-row items-start justify-between">
+    <main className="flex min-h-screen flex-col items-start justify-between">
       {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"> */}
-      <header className="bg-white w-full">
+      <header className="bg-black w-full">
         <div className="mx-2 flex h-16 max-w-screen-2xl items-center justify-between gap-8 px-0 sm:px-6 lg:px-0">
           <a className="block text-teal-600" href="#">
             <span className="sr-only">Home</span>
@@ -136,7 +138,36 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <div></div>
+      <div>
+        <div className="flex flex-col">
+          <div className="flex-1">
+            <video autoPlay muted loop className='opacity-30 h-full '>
+                <source src="/video1.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="flex-2 opacity-30">
+            <Image
+                src="/background2.jpg"
+                alt=''
+                // layout="fill" 
+                // objectFit="cover" 
+                layout="responsive"
+                width={500}
+                height={500}
+                priority
+            />
+          </div>
+        </div>
+
+        <div className="absolute top-32">
+          <div className="flex-1 w-full">
+            <Section1 />
+          </div>
+          <div className="flex-2 w-full ">
+            <Section2 />
+          </div>
+        </div>
+      </div>
       {/* </div> */}
     </main>
   );

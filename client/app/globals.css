@@ -32,3 +32,12 @@ body {
   }
 }
 
+.text-gradient {
+  background: linear-gradient(to right, #ec4899, #6d28d9); /* From pink-600 to purple-900 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font-a {
+  font-family: 'Montserrat', sans-serif;
+}
