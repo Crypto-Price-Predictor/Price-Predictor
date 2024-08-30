@@ -48,7 +48,7 @@ def train_model(filepath):
 
     model = create_model(look_back,future_steps)
     
-    model.fit(trainX, trainY, epochs=5, verbose=1, shuffle=False, batch_size=50)
+    model.fit(trainX, trainY, epochs=10, verbose=1, shuffle=False, batch_size=50)
 
     # Save the trained model
     joblib.dump(model, './server/models/model_TRX.pkl')

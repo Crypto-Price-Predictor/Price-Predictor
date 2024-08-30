@@ -14,7 +14,7 @@ def predict():
     param1 = request.args.get('coin', type=str)
     
     end_date = datetime.now()  # Current date
-    start_date = end_date - timedelta(days=5)  # 4 days before now
+    start_date = end_date - timedelta(days=4)  # 4 days before now
 
     api_key = '89c98780049c75a3fd8b0eb86678497b7c1bdc79527b30b59ecdce5e583d6333'
 

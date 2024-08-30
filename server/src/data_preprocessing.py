@@ -41,8 +41,8 @@ def split_data(data, look_back, future_steps):
     train, test = dataset[0:train_size, :], dataset[train_size:len(dataset), :]
 
     # Create dataset for multiple future steps
-    trainX, trainY = create_dataset(train, look_back, 3, future_steps)
-    testX, testY = create_dataset(test, look_back, 3, future_steps)
+    trainX, trainY = create_dataset(train, look_back, 0, future_steps)
+    testX, testY = create_dataset(test, look_back, 0, future_steps)
 
     # Reshape input to be [samples, time steps, features]
     trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
