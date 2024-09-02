@@ -15,6 +15,9 @@ def predict():
     
     end_date = datetime.now()  # Current date
     start_date = end_date - timedelta(days=4)  # 4 days before now
+    
+    if (end_date.hour <= 5):
+        start_date = end_date - timedelta(days=5)
 
     api_key = '89c98780049c75a3fd8b0eb86678497b7c1bdc79527b30b59ecdce5e583d6333'
 
