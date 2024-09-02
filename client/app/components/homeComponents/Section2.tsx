@@ -45,6 +45,8 @@ const Section2 = () => {
                 </div>
             </div>
 
+            <hr className='my-10 border-t border-white' />
+
         </div>
     </div>
   )

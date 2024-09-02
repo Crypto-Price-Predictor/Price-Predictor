@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { signIn } from "next-auth/react";
-import Section1 from "./components/components/home_components/Section1";
-import Section2 from "./components/components/home_components/Section2";
-import { useEffect, useState } from "react";
+import loginButton from "./components/loginButton";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import Section1 from "./components/homeComponents/Section1";
+import Section2 from "./components/homeComponents/Section2";
+import Section3 from "./components/homeComponents/Section3";
+import Section4 from "./components/homeComponents/Section4";
+import Section5 from "./components/homeComponents/Section5";
 
 export default function Home() {
-  const [ischange, setIsChange] = useState(false);
   const handleLogin = async () => {
     const result = await signIn("google", { callbackUrl: "/User" });
 
@@ -16,24 +21,6 @@ export default function Home() {
       console.error("Login failed:", result.error);
     }
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition: number = window.scrollY;
-      if (scrollPosition > 100) {
-        setIsChange(true);
-      } else {
-        setIsChange(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-start justify-between">
@@ -45,6 +32,7 @@ export default function Home() {
             <Image
               src="/logo3.svg"
               alt="Logo"
+              // className="light:invert"
               width={250}
               height={50}
               priority
@@ -155,27 +143,26 @@ export default function Home() {
       </header>
       <div>
         <div className="flex flex-col">
-          {!ischange ? (
-            <div>
-              <video autoPlay muted loop className="opacity-30 h-full ">
+          <div className="flex-1">
+            <video autoPlay muted loop className='opacity-30 h-full '>
                 <source src="/video1.mp4" type="video/mp4" />
-              </video>
-            </div>
-          ) : (
-            <div className="opacity-30 min-h-screen">
-              <Image
+            </video>
+          </div>
+          <div className="flex-2 opacity-30">
+            <Image
                 src="/background2.jpg"
-                alt="Background"
-                sizes="cover"
-                // layout="fill"
-                // objectFit="cover"
+                alt=''
+                // layout="fill" 
+                // objectFit="cover" 
                 layout="responsive"
-                width={1000}
-                height={1000}
+                width={500}
+                height={500}
                 priority
-              />
-            </div>
-          )}
+            />
+          </div>
+          <div className="bg-black h-screen">
+
+          </div>
         </div>
 
         <div className="absolute top-32">
@@ -184,6 +171,15 @@ export default function Home() {
           </div>
           <div className="flex-2 w-full ">
             <Section2 />
+          </div>
+          <div className="flex-2 w-full ">
+            <Section3 />
+          </div>
+          <div className="flex-2 w-full ">
+            <Section4 />
+          </div>
+          <div className="flex-2 w-full ">
+            <Section5 />
           </div>
         </div>
       </div>

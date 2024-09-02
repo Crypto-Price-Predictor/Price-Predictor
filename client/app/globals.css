@@ -38,6 +38,12 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.text-gradient-wb {
+  background: linear-gradient(to right, white, black); /* From pink-600 to purple-900 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .font-a {
   font-family: 'Montserrat', sans-serif;
 }
