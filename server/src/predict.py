@@ -8,6 +8,13 @@ import joblib # type: ignore
 app = Flask(__name__)
 CORS(app)
 
+# Initialize a dictionary to hold the history for each coin
+history_dict = {
+    'BTC': [],
+    'SHIB': [],
+    'TRX': []
+}
+
 @app.route('/predict', methods=['GET'])
 def predict():
     
@@ -65,7 +72,26 @@ def predict():
         # else:
         #     joblib.dump(history, '../../server/history/TRX.pkl')
         
-        return jsonify(future_predictions.tolist() + actual.tolist())
+        future_predictions = future_predictions.astype(float).tolist()
+        actual = actual.astype(float).tolist()
+
+        # Get the next predicted value (index 0)
+        next_predicted_value = future_predictions[0][0]
+
+        # Update history for the specific coin
+        if len(history_dict[param1]) >= 4:
+            history_dict[param1].pop(0)  # Remove the oldest value
+        history_dict[param1].append(next_predicted_value)  # Add the new predicted value
+
+        # Optionally save the updated history back to disk
+        joblib.dump(history_dict[param1], f'../../server/history/{param1}.pkl')
+
+        return jsonify({
+            "future_predictions": future_predictions,
+            "actual": actual,
+            "history": history_dict[param1]})
+        
+        # return jsonify(future_predictions.tolist() + actual.tolist())
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
