@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Section5 = () => {
   return (
-    <div className='pt-10'>
+    <div className=''>
         <footer className="footer footer-center bg-gradient-to-b from-black to-gray-700 p-10" style={{ fontFamily: 'Montserrat' }}>
             <aside>
                 <Image

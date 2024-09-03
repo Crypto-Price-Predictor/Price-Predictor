@@ -13,7 +13,7 @@ const Section4 = () => {
           </p>
         </div>
         
-        <h2 className='text-center text-3xl'>Disclaimer</h2>
+        <h2 id='disclaimer' className='text-center text-3xl'>Disclaimer</h2>
 
         <div className='w-1/2 flex items-center justify-center mx-auto py-5'>
           <p className='text-center'>
@@ -21,7 +21,10 @@ const Section4 = () => {
           </p>
         </div>
 
-        <hr className='my-10 border-t border-white' />
+        <div className=''>
+          <hr className='my-10 border-t border-white' />
+        </div>
+        
 
       </div>
     </div>

@@ -75,7 +75,7 @@ const Section3 = () => {
                 </div>
             </div>
 
-            <hr className='my-10 border-t border-white' />
+            <hr id="about" className='my-10 border-t border-white' />
 
         </div>
     </div>
