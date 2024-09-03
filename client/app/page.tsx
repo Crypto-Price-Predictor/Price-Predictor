@@ -11,8 +11,11 @@ import Section2 from "./components/homeComponents/Section2";
 import Section3 from "./components/homeComponents/Section3";
 import Section4 from "./components/homeComponents/Section4";
 import Section5 from "./components/homeComponents/Section5";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
+
   const handleLogin = async () => {
     const result = await signIn("google", { callbackUrl: "/User" });
 
@@ -25,7 +28,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-start justify-between">
       {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"> */}
-      <header className="bg-black w-full">
+      <header className="bg-black w-full fixed top-0 z-50">
         <div className="mx-2 flex h-16 max-w-screen-2xl items-center justify-between gap-8 px-0 sm:px-6 lg:px-0">
           <a className="block text-teal-600" href="#">
             <span className="sr-only">Home</span>
@@ -43,63 +46,53 @@ export default function Home() {
             <nav aria-label="Global" className="hidden md:block">
               <ul className="flex items-center gap-6 text-sm">
                 <li>
-                  <a
+                  <Link
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
+                    href="#home"
                   >
                     {" "}
-                    About{" "}
-                  </a>
+                    Home{" "}
+                  </Link>
                 </li>
 
                 <li>
-                  <a
+                <Link
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
+                    href="#features"
                   >
                     {" "}
-                    Careers{" "}
-                  </a>
+                    Features{" "}
+                  </Link>
                 </li>
 
                 <li>
-                  <a
+                <Link
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
+                    href="#working"
                   >
                     {" "}
-                    History{" "}
-                  </a>
+                    How it works{" "}
+                  </Link>
                 </li>
 
                 <li>
-                  <a
+                <Link
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
+                    href="#about"
                   >
                     {" "}
-                    Services{" "}
-                  </a>
+                    About us{" "}
+                  </Link>
                 </li>
 
                 <li>
-                  <a
+                <Link
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
+                    href="#disclaimer"
                   >
                     {" "}
-                    Projects{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-500 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    Blog{" "}
-                  </a>
+                    Disclaimer{" "}
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -142,7 +135,7 @@ export default function Home() {
         </div>
       </header>
       <div>
-        <div className="flex flex-col">
+        <div id='home' className="flex flex-col">
           <div className="flex-1">
             <video autoPlay muted loop className="opacity-30 h-full ">
               <source src="/video1.mp4" type="video/mp4" />
@@ -161,19 +154,20 @@ export default function Home() {
             />
           </div>
           <div className="bg-black h-screen"></div>
+          <div className="bg-black h-64"></div>
         </div>
 
         <div className="absolute top-32">
           <div className="flex-1 w-full">
             <Section1 handleClick={handleLogin} />
           </div>
-          <div className="flex-2 w-full ">
+          <div className="flex-2 w-full">
             <Section2 />
           </div>
-          <div className="flex-2 w-full ">
+          <div className="flex-2 w-full">
             <Section3 />
           </div>
-          <div className="flex-2 w-full ">
+          <div className="flex-2 w-full">
             <Section4 />
           </div>
           <div className="flex-2 w-full ">

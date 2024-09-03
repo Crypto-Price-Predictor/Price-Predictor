@@ -21,7 +21,7 @@ const Section1: React.FC<section1Prps> = ({ handleClick }) => {
           </div>
           <div className="flex flex-row pb-5">
             <div className="text-xl w-3/5 px-16 pt-10">
-              <p
+              <p 
                 className="font1 text-justify text-gray-400"
                 style={{ fontFamily: "Montserrat" }}
               >
@@ -44,7 +44,7 @@ const Section1: React.FC<section1Prps> = ({ handleClick }) => {
               </button>
             </div>
           </div>
-          <hr className="my-4 border-t border-white" />
+          <hr id="features" className="my-10 border-t border-white" />
         </div>
       </div>
     </div>
