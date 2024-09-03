@@ -144,30 +144,28 @@ export default function Home() {
       <div>
         <div className="flex flex-col">
           <div className="flex-1">
-            <video autoPlay muted loop className='opacity-30 h-full '>
-                <source src="/video1.mp4" type="video/mp4" />
+            <video autoPlay muted loop className="opacity-30 h-full ">
+              <source src="/video1.mp4" type="video/mp4" />
             </video>
           </div>
           <div className="flex-2 opacity-30">
             <Image
-                src="/background2.jpg"
-                alt=''
-                // layout="fill" 
-                // objectFit="cover" 
-                layout="responsive"
-                width={500}
-                height={500}
-                priority
+              src="/background2.jpg"
+              alt=""
+              // layout="fill"
+              // objectFit="cover"
+              layout="responsive"
+              width={500}
+              height={500}
+              priority
             />
           </div>
-          <div className="bg-black h-screen">
-
-          </div>
+          <div className="bg-black h-screen"></div>
         </div>
 
         <div className="absolute top-32">
           <div className="flex-1 w-full">
-            <Section1 />
+            <Section1 handleClick={handleLogin} />
           </div>
           <div className="flex-2 w-full ">
             <Section2 />

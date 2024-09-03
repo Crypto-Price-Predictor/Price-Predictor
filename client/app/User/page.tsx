@@ -9,10 +9,12 @@ import CurrSelecter from "../components/CurrSelecter";
 import AboutPred from "../components/AboutPred";
 import AboutStability from "../components/AboutStability";
 import axios from "axios";
+import { list } from "postcss";
 
 const Dashboard: React.FC = () => {
   const [curr, setCurr] = useState("BTC");
   const [predictions, setPredictions] = useState<number[]>([]);
+  const [actual, setActual] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,10 +26,8 @@ const Dashboard: React.FC = () => {
         const response = await axios.get(
           `http://127.0.0.1:5000/predict?coin=${curr}`
         );
-        // Assuming the response contains a property 'predictions' which is an array
-        const data = response.data[0]; // Adjust based on your actual API response structure
-        setPredictions(data); // Ensure predictions is an array
-        console.log(data);
+        setPredictions(response.data[0]);
+        setActual(response.data[1]);
       } catch (err) {
         setError("Error fetching predictions");
         console.error(err);
@@ -40,10 +40,10 @@ const Dashboard: React.FC = () => {
   }, [curr]);
 
   const series = [
-    // {
-    //   name: "Actual", // Name of the series
-    //   data: [44000, 56000, 75000, 56000, 55000, 60000, 69000], // Data points for the series
-    // },
+    {
+      name: "Actual", // Name of the series
+      data: actual, // Data points for the series
+    },
     {
       name: "Predict",
       data: predictions,
