@@ -1,11 +1,22 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
-interface section1Prps {
-  handleClick: () => void;
-}
+// interface section1Prps {
+//   handleClick: () => void;
+// }
 
-const Section1: React.FC<section1Prps> = ({ handleClick }) => {
+const Section1: React.FC = () => {
+  const handleLogin = async () => {
+    const result = await signIn("google", { callbackUrl: "/User" });
+
+    // Check if the sign-in was successful
+    if (result?.error) {
+      console.error("Login failed:", result.error);
+    }
+  };
   return (
     <div>
       <div className="">
@@ -21,7 +32,7 @@ const Section1: React.FC<section1Prps> = ({ handleClick }) => {
           </div>
           <div className="flex flex-row pb-5">
             <div className="text-xl w-3/5 px-16 pt-10">
-              <p 
+              <p
                 className="font1 text-justify text-gray-400"
                 style={{ fontFamily: "Montserrat" }}
               >
@@ -38,7 +49,7 @@ const Section1: React.FC<section1Prps> = ({ handleClick }) => {
             <div className="w-2/5 px-16 pt-10 flex items-center justify-center">
               <button
                 className="text-gray-400 bg-gradient-to-r from-pink-600 to-purple-900 w-3/4 h-1/3 text-2xl hover:opacity-50 px-4 py-2 rounded-full"
-                onClick={handleClick}
+                onClick={handleLogin}
               >
                 Get Started
               </button>

@@ -1,5 +1,5 @@
-import NextAuth, { NextAuthOptions, Session, User } from 'next-auth';
-import {JWT} from "next-auth"
+import NextAuth, { NextAuthOptions, Session, User, JWT } from 'next-auth';
+// import {JWT} from "next-auth"
 import GoogleProvider from 'next-auth/providers/google';
 import { PrismaClient } from '@prisma/client';
 
@@ -29,6 +29,7 @@ const authOptions = {
           },
         });
       }
+      // sessionStorage.setItem("id", existingUser?.id.toString() || "")
 
       return true; // Allow sign-in
     },
@@ -36,9 +37,12 @@ const authOptions = {
       // Attach user ID to session
       if (session.user) {
         const user = await prisma.user.findUnique({
-          where: { email: session.user.email || "" },
+          where: { email: session.user.email },
         });
-        // session.user.id = user?.id || null; // Add user ID to session or set to null
+        if(user){
+           session.user.id = user.id.toString();
+        } // Add user ID to session or set to null 
+        // session.user.id = token.id as string;  // Ensure `id` is correctly set
       }
       return session;
     },
