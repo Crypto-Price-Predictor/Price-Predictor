@@ -6,14 +6,14 @@ def fetch_data(start_date, end_date, coin_id, api_key):
     
     # Convert dates to timestamps
     end_timestamp = int(end_date.timestamp())
-    start_timestamp = int(start_date.timestamp())
+    # start_timestamp = int(start_date.timestamp())
 
     params = {
         'fsym': coin_id,  # From Symbol
         'tsym': 'USDT',   # To Symbol
         'toTs': end_timestamp,  # End timestamp
         'limit': 2000,  # Maximum number of days to fetch
-        'api_key': api_key  # Your API key
+        'api_key': api_key  # API key
     }
 
     response = requests.get(url, params=params)
@@ -39,7 +39,7 @@ def fetch_data(start_date, end_date, coin_id, api_key):
     df.set_index('time', inplace=True)
 
     # Filter the DataFrame for the desired date range
-    df = df[(df.index >= start_date) & (df.index <= end_date)]
+    # df = df[(df.index >= start_date) & (df.index <= end_date)]
 
     # Select only the closing price
     daily_close = df[['close']]

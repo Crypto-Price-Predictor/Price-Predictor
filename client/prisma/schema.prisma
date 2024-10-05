@@ -14,9 +14,28 @@ generator client {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String?
-  email String  @unique
-  image String?
+  id            Int             @id @default(autoincrement())
+  name          String?
+  email         String          @unique
+  image         String?
+  portfolioUser portfolioUser[]
 }
 
+model portfolioUser {
+  id      Int      @id @default(autoincrement())
+  name    String
+  owner   User     @relation(fields: [User_ID], references: [id], onDelete: Cascade)
+  User_ID Int
+  trades  trades[]
+}
+
+model trades {
+  id             Int           @id @default(autoincrement())
+  coin           String?
+  initial_amount Decimal
+  boughtPrice    Decimal
+  date           DateTime
+  profit         Decimal?
+  Portfolio_ID   Int
+  user           portfolioUser @relation(fields: [Portfolio_ID], references: [id], onDelete: Cascade)
+}

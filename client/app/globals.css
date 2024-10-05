@@ -47,3 +47,8 @@ body {
 .font-a {
   font-family: 'Montserrat', sans-serif;
 }
+
+.ant-collapse-content-box {
+  background-color: transparent !important; /* or your desired color */
+  padding: 0 !important; /* Adjust padding */
+}

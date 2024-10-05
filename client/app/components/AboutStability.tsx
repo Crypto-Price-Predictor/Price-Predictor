@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
 
-const AboutStability = () => {
-  return (
-    <div>AboutStability</div>
-  )
+interface stabilityProps {
+  value: boolean;
 }
 
-export default AboutStability
+const AboutStability: React.FC<stabilityProps> = ({ value }) => {
+  return (
+    <div className={`${value ? "text-white" : "text-black"}`}>
+      AboutStability
+    </div>
+  );
+};
+
+export default AboutStability;

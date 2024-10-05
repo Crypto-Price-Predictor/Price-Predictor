@@ -15,14 +15,19 @@ interface TopicGraphProps {
     data: number[];
   }[];
   categories: string[];
+  value: boolean;
 }
 
 // Functional component for the Topic Graph using TypeScript
-const TopicGraph: React.FC<TopicGraphProps> = ({ series, categories }) => {
+const TopicGraph: React.FC<TopicGraphProps> = ({
+  series,
+  categories,
+  value,
+}) => {
   // Chart configuration options using ApexOptions type for type safety
   const options: ApexOptions = {
     chart: {
-      type: "area", 
+      type: "area",
       zoom: {
         enabled: false, // Enable zooming feature on the chart
       },
@@ -34,8 +39,7 @@ const TopicGraph: React.FC<TopicGraphProps> = ({ series, categories }) => {
     stroke: {
       curve: "smooth", // Define the line curve as smooth
     },
-    title: {
-    },
+    title: {},
     markers: {
       size: 5, // Set the size of the markers on the chart
     },
@@ -46,22 +50,24 @@ const TopicGraph: React.FC<TopicGraphProps> = ({ series, categories }) => {
       },
     },
     theme: {
-      mode: 'dark', // Apply a dark theme to the chart
-      palette: 'palette1', // Optional: use a specific color palette
+      mode: value ? "dark" : "light", // Apply a dark theme to the chart
+      palette: "palette1", // Optional: use a specific color palette
       monochrome: {
         enabled: false,
-        color: '#FFFFFF', // Set the monochrome color to white
-        shadeTo: 'light',
-        shadeIntensity: 0.65
-      }
+        color: "#FFFFFF", // Set the monochrome color to white
+        shadeTo: "light",
+        shadeIntensity: 0.65,
+      },
     },
   };
 
   // Render the ApexChart component with the provided options and series
   return (
-      <div className="pt-4 shadow-lg rounded-lg bg-black">
-        <ApexChart options={options} series={series} type="area" height={700} />
-      </div>
+    <div
+      className={`shadow-lg rounded-lg ${value ? "bg-gray-700" : "bg-white"}`}
+    >
+      <ApexChart options={options} series={series} type="area" height={450} />
+    </div>
   );
 };
 

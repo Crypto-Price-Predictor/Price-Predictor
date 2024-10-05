@@ -1,110 +1,174 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import NavBar from "./../components/NavBar";
-import SlideMenu from "../components/SlideMenu";
-import TopicGraph from "../components/TopicGraph"; // Updated import
-import TimeSelecter from "../components/TimeSelecter";
-import CurrSelecter from "../components/CurrSelecter";
-import AboutPred from "../components/AboutPred";
-import AboutStability from "../components/AboutStability";
-import axios from "axios";
-import { list } from "postcss";
+import React, { useEffect, useState } from "react";
+import {
+  LaptopOutlined,
+  NotificationOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Layout, Menu, theme, Switch } from "antd";
+import HomeContent from "./Home/page"; // Example component for Home
+import ListContent from "./portfolio/page"; // Example component for List
+import type { MenuProps, MenuTheme } from "antd";
+import { getSession, useSession } from "next-auth/react";
+import { GetServerSidePropsContext } from "next";
 
-const Dashboard: React.FC = () => {
-  const [curr, setCurr] = useState("BTC");
-  const [predictions, setPredictions] = useState<number[]>([]);
-  const [actual, setActual] = useState<number[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const { Header, Content, Sider } = Layout;
+
+const items2 = [
+  {
+    key: "1",
+    icon: <UserOutlined />,
+    label: "Home",
+  },
+  {
+    key: "2",
+    icon: <LaptopOutlined />,
+    label: "Portfolio",
+  },
+  // {
+  //   key: '3',
+  //   icon: <NotificationOutlined />,
+  //   label: 'App',
+  // },
+  // {
+  //   key: '4',
+  //   icon: <LaptopOutlined />,
+  //   label: 'Laptop',
+  // },
+  // {
+  //   key: '5',
+  //   icon: <NotificationOutlined />,
+  //   label: 'Notifications',
+  // },
+];
+
+const AppLayout: React.FC = () => {
+  const { data: session } = useSession();
+  const [selectedMenu, setSelectedMenu] = useState<string>("1"); // Keep track of selected menu
+  const [theme, setTheme] = useState<MenuTheme>();
+  const [background, setBackground] = useState("#1f1f1f");
+  const [contentBackground, setContentBackground] = useState("black");
+  const [value, setValue] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true); // Set loading to true at the start
-      setError(null);
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:5000/predict?coin=${curr}`
-        );
-        setPredictions(response.data[0]);
-        setActual(response.data[1]);
-      } catch (err) {
-        setError("Error fetching predictions");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (session?.user?.id) {
+      // Store the user ID in sessionStorage
+      sessionStorage.setItem("userId", session.user.id);
+      // console.log("User ID stored in sessionStorage:", session.user.id);
+    }
+  }, [session]);
 
-    fetchData();
-  }, [curr]);
+  useEffect(() => {
+    setTimeout(() => {
+      const value = sessionStorage.getItem("theme");
+      const Theme = value === "false" ? false : true;
+      setValue(Theme);
+      changeColor(Theme);
+      setIsLoading(false);
+    }, 800);
+  }, []);
 
-  const series = [
-    {
-      name: "Actual", // Name of the series
-      data: actual, // Data points for the series
-    },
-    {
-      name: "Predict",
-      data: predictions,
-    },
-  ];
-
-  // Categories for the x-axis
-  const categories = [
-    "Day 1",
-    "Day 2",
-    "Day 3",
-    "Day 4",
-    "Day 5",
-    "Day 6",
-    "Day 7",
-  ];
-
-  //AboutPred parameters
-  const parameters = [
-    "Prediction accuracy (MSE)",
-    "Prediction Error (Presentage error)",
-    "Some other parameters",
-  ];
-  const values = ["0.2", "2.5%", "xxx"];
-
-  const handleCurrChange = async (curr: string) => {
-    setCurr(curr);
+  const changeTheme = (value: boolean) => {
+    setValue(value);
+    sessionStorage.setItem("theme", String(value));
+    changeColor(value);
   };
 
-  return (
-    <div>
-      <NavBar />
-      <div className="flex">
-        <SlideMenu />
-        <div className="flex-grow flex-col w-4/5 p-4">
-          <div className="flex bg-base-200 p-2 rounded-lg">
-            <CurrSelecter handleChange={handleCurrChange} />
-            <TimeSelecter />
-          </div>
-          <div className="flex-grow">
-            {loading ? (
-              <p>Loading predictions...</p>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
-            ) : (
-              <TopicGraph series={series} categories={categories} />
-            )}
-          </div>
-        </div>
+  const changeColor = (value: boolean) => {
+    setTheme(value ? "dark" : "light");
+    setBackground(value ? "#1f1f1f" : "white");
+    setContentBackground(value ? "black" : "#fafaf9");
+  };
 
-        <div className="flex-col w-1/5 p-4 pl-0">
-          <div className="">
-            <AboutPred parameters={parameters} values={values} />
-          </div>
-          <div className="">
-            <AboutStability />
-          </div>
-        </div>
+  const renderContent = () => {
+    switch (selectedMenu) {
+      case "1":
+        return <HomeContent value={value} />; // Render HomeContent component
+      case "2":
+        return <ListContent value={value} />; // Render ListContent component
+      case "3":
+        return <div>Laptop Content</div>; // Render AppContent component
+      case "4":
+        return <div>Laptop Content</div>; // You can replace this with a component
+      case "5":
+        return <div>Notifications Content</div>; // You can replace this with a component
+      default:
+        return <div>Select a menu item</div>;
+    }
+  };
+
+  const handleMenuClick = (e: any) => {
+    setSelectedMenu(e.key); // Update the selected menu state
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <Layout
+      style={{
+        background: contentBackground,
+        maxHeight: "fit-content",
+        minHeight: "100vh",
+      }}
+    >
+      <NavBar />
+      <Layout
+        style={{ height: "100%", margin: "5px", background: contentBackground }}
+        className="bg-o"
+      >
+        <Sider
+          width={200}
+          style={{ background: background, border: 2, borderRadius: "8px" }}
+        >
+          <Switch
+            checked={theme === "dark"}
+            onChange={changeTheme}
+            checkedChildren="Dark"
+            unCheckedChildren="Light"
+          />
+          <br />
+          <br />
+          <Menu
+            theme={theme}
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            style={{
+              height: "auto",
+              borderRight: 2,
+              borderRadius: "6px",
+            }}
+            items={items2}
+            onClick={handleMenuClick} // Handle menu click to update content
+          />
+        </Sider>
+        <Layout
+          style={{ padding: "0 24px 24px", background: contentBackground }}
+        >
+          <Content
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: "100%",
+              background: contentBackground,
+              borderRadius: "6px",
+            }}
+          >
+            {renderContent()}
+            {/* Dynamically render content based on menu selection */}
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   );
 };
 
-export default Dashboard;
+export default AppLayout;
