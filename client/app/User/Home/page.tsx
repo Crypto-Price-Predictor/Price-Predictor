@@ -39,34 +39,35 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       setLoading(true); // Set loading to true at the start
       setError(null);
-      console.log(sessionStorage.getItem("userId"));
-      try {
-        const response: AxiosResponse<PredictionResponse> = await axios.get(
-          `http://127.0.0.1:5000/predict?coin=${curr}`
-        );
-        setPredictions(response.data.future_predictions[0]);
-        setActual(response.data.actual[0]);
-        setHistory(response.data.history);
-        success("success", "Data fetched successfully");
-      } catch (err: any) {
-        if (err.response) {
-          // Server responded with a status code out of 2xx range
-          setError(`Error: ${err.response.status} - ${err.response.data}`);
-        } else if (err.request) {
-          // Request was made but no response received
-          setError("Network Error: No response from the server");
-        } else {
-          // Something else caused the error
-          setError(`Error: ${err.message}`);
+      setTimeout(async () => {
+        try {
+          const response: AxiosResponse<PredictionResponse> = await axios.get(
+            `http://127.0.0.1:5000/predict?coin=${curr}`
+          );
+          setPredictions(response.data.future_predictions[0]);
+          setActual(response.data.actual[0]);
+          setHistory(response.data.history);
+          success("success", "Data fetched successfully");
+        } catch (err: any) {
+          if (err.response) {
+            // Server responded with a status code out of 2xx range
+            setError(`Error: ${err.response.status} - ${err.response.data}`);
+          } else if (err.request) {
+            // Request was made but no response received
+            setError("Network Error: No response from the server");
+          } else {
+            // Something else caused the error
+            setError(`Error: ${err.message}`);
+          }
+          success("error", "Error fetching data");
+          console.error(err);
+        } finally {
+          setLoading(false);
         }
-        success("error", "Error fetching data");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      }, 1400);
     };
 
     fetchData();

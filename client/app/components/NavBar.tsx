@@ -2,7 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Dashboard from "./../User/page";
 
-const NavBar = () => {
+interface navBarProps {
+  image: string;
+}
+
+const NavBar: React.FC<navBarProps> = ({ image }) => {
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -13,7 +17,7 @@ const NavBar = () => {
               alt="Logo"
               // className="light:invert"
               width={250}
-              height={50}
+              height={40}
               priority
             />
           </a>
@@ -32,7 +36,14 @@ const NavBar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-100 h-100 rounded-full">
-                <img alt="Tailwind CSS Navbar component" src="/Profile.jpg" />
+                <Image
+                  src={image || "/Profile.jpg"} // Fallback to a default image
+                  alt="User Avatar"
+                  layout="fill"
+                  className="rounded-full"
+                  objectFit="cover"
+                  priority
+                />
               </div>
             </div>
             <ul

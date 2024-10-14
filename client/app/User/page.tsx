@@ -7,12 +7,14 @@ import {
   NotificationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme, Switch } from "antd";
+import { Layout, Menu, Switch } from "antd";
 import HomeContent from "./Home/page"; // Example component for Home
 import ListContent from "./portfolio/page"; // Example component for List
-import type { MenuProps, MenuTheme } from "antd";
-import { getSession, useSession } from "next-auth/react";
-import { GetServerSidePropsContext } from "next";
+import type { MenuTheme } from "antd";
+// import { getSession, useSession } from "next-auth/react";
+import { useSessionCheck } from "../../hook/useSessionCeck";
+import LoginExpire from "../components/LoginExpire";
+// import { GetServerSidePropsContext } from "next";
 
 const { Header, Content, Sider } = Layout;
 
@@ -45,29 +47,36 @@ const items2 = [
 ];
 
 const AppLayout: React.FC = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const { session, status } = useSessionCheck();
   const [selectedMenu, setSelectedMenu] = useState<string>("1"); // Keep track of selected menu
   const [theme, setTheme] = useState<MenuTheme>();
   const [background, setBackground] = useState("#1f1f1f");
   const [contentBackground, setContentBackground] = useState("black");
   const [value, setValue] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginExpired, setIsLoginExpired] = useState(false);
+  const [image, setImage] = useState("");
 
   useEffect(() => {
-    if (session?.user?.id) {
-      // Store the user ID in sessionStorage
-      sessionStorage.setItem("userId", session.user.id);
-      // console.log("User ID stored in sessionStorage:", session.user.id);
+    if (status === "unauthenticated") {
+      setIsLoginExpired(true);
+    } else if (session?.user?.image) {
+      setImage(session.user.image || "");
     }
   }, [session]);
 
   useEffect(() => {
+    if (status === "loading") {
+      setIsLoading(true);
+    }
     setTimeout(() => {
       const value = sessionStorage.getItem("theme");
       const Theme = value === "false" ? false : true;
       setValue(Theme);
       changeColor(Theme);
       setIsLoading(false);
+      // setImage(session?.user.image || "");
     }, 800);
   }, []);
 
@@ -120,7 +129,7 @@ const AppLayout: React.FC = () => {
         minHeight: "100vh",
       }}
     >
-      <NavBar />
+      <NavBar image={image} />
       <Layout
         style={{ height: "100%", margin: "5px", background: contentBackground }}
         className="bg-o"
@@ -167,6 +176,7 @@ const AppLayout: React.FC = () => {
           </Content>
         </Layout>
       </Layout>
+      <LoginExpire isOpen={isLoginExpired} />
     </Layout>
   );
 };
