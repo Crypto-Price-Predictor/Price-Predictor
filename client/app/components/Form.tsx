@@ -37,24 +37,29 @@ const App: React.FC = () => {
     setIsLoading(true);
     setTimeout(async () => {
       try {
-        console.log("onsubmit");
-        const res = await fetch("/api/createPortfolio", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: form.getFieldValue("name"),
-            userId: sessionStorage.getItem("userId"), // Get user ID from sessionStorage
-          }),
-        });
-        console.log(res);
+        if (form.getFieldValue("name") && form.getFieldValue("coin")) {
+          const res = await fetch("/api/createPortfolio", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: form.getFieldValue("name"),
+              userId: sessionStorage.getItem("userId"), // Get user ID from sessionStorage
+            }),
+          });
+          console.log(res);
 
-        if (res.ok) {
-          const data = await res.json();
-          // console.log("User created:", data);
-          success("success", "User created successfully");
-          window.location.href = "/User/portfolio";
+          if (res.ok) {
+            const data = await res.json();
+            // console.log("User created:", data);
+            success("success", "User created successfully");
+            window.location.href = "/User/portfolio";
+          } else {
+            console.error("Error creating user");
+            success("error", "Error creating user");
+            setIsLoading(false);
+          }
         } else {
           console.error("Error creating user");
           success("error", "Error creating user");
@@ -89,6 +94,7 @@ const App: React.FC = () => {
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
     >
+      {contextHolder}
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input />
       </Form.Item>

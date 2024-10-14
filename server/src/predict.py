@@ -16,6 +16,12 @@ history_dict = {
     'TRX': []
 }
 
+history_set_dict = {
+    'BTC': {'set':False, 'date':datetime.now()},
+    'SHIB': {'set':False, 'date':datetime.now()},
+    'TRX': {'set':False, 'date':datetime.now()}
+}
+
 dataset = {
     'BTC': [],
     'SHIB': [],
@@ -25,23 +31,25 @@ dataset = {
 @app.route('/predict', methods=['GET'])
 def predict():
     
-    setHistory = False
     api_key = '89c98780049c75a3fd8b0eb86678497b7c1bdc79527b30b59ecdce5e583d6333'
     
     param1 = request.args.get('coin', type=str)
     history_dict[param1] = joblib.load(f'../../server/history/{param1}.pkl')
-    # joblib.dump(dataset[param1],f'../../server/data/{param1}.pkl')
+
+    history_set_dict = joblib.load(f'../../server/history/set.pkl')
+    setHistory = history_set_dict[param1]['set']
     
     end_date = datetime.now()  # Current date
     start_date = end_date - timedelta(days=4)  # 4 days before now
     
     if (end_date.hour <= 5):
         start_date = end_date - timedelta(days=5)
-        setHistory = True
+        if (not setHistory) and (datetime.now().date() > history_set_dict[param1]['date'].date()):
+            setHistory = True
+            history_set_dict[param1]['date'] = datetime.now()
 
     # Fetch data
     data = fetch_data(start_date, end_date, param1, api_key)
-    print(data.tail()) 
     
     # Get data from the request
     # dataset = data.values.astype('float64').reshape(-1,1)
@@ -86,6 +94,7 @@ def predict():
 
         # Optionally save the updated history back to disk
         joblib.dump(history_dict[param1], f'../../server/history/{param1}.pkl')
+        joblib.dump(history_set_dict, f'../../server/history/set.pkl')
 
         return jsonify({
             "future_predictions": future_predictions,

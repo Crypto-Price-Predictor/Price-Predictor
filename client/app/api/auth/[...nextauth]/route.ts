@@ -1,5 +1,5 @@
-import NextAuth, { NextAuthOptions, Session, User, JWT } from 'next-auth';
-// import {JWT} from "next-auth"
+import NextAuth, { NextAuthOptions, Session, User } from 'next-auth';
+import {JWT} from "next-auth/jwt"
 import GoogleProvider from 'next-auth/providers/google';
 import { PrismaClient } from '@prisma/client';
 
@@ -12,6 +12,9 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  session: {
+    maxAge: 30 * 60, // Session will expire after 30 minutes of inactivity
+  },
   callbacks: {
     async signIn({ user, account, profile } : { user: User; account: any; profile: any }) {
       // Check if the user already exists
@@ -41,6 +44,7 @@ const authOptions = {
         });
         if(user){
            session.user.id = user.id.toString();
+           session.expires = '0.5h'
         } // Add user ID to session or set to null 
         // session.user.id = token.id as string;  // Ensure `id` is correctly set
       }
@@ -54,8 +58,14 @@ const authOptions = {
       return token;
     },
   },
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+    encryption: true,
+    maxAge: 15 * 60,  // JWT will expire in 15 minutes
+    refreshToken: true,  // Automatically refresh the token
+  },
   pages: {
-    signIn: '/User', // Custom sign-in page
+    signIn: '/api/auth/signin', // Custom sign-in page
   },
 };
 
