@@ -11,6 +11,9 @@ const SlideMenu = () => {
         <li>
           <a href="/User/portfolio">Portfolio</a>
         </li>
+        <li>
+          <a href="/User/News">News page</a>
+        </li>
         <div>
           <line>----------------------------------------</line>
         </div>

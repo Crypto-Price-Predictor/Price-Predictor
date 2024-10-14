@@ -5,6 +5,8 @@ from model import create_model
 from datetime import datetime, timedelta
 import numpy as np # type: ignore
 import joblib # type: ignore
+from nlp import fetch_data_nlp
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app)
@@ -95,6 +97,15 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
+
+@app.route('/api', methods=['GET'])
+def get_dataframe():
+    # Example DataFrame
+    df = fetch_data_nlp()
+    
+    # Convert DataFrame to JSON
+    data_json = df.to_json(orient='records')
+    return jsonify(data_json)
 
 if __name__ == '__main__':
     app.run(debug=True)

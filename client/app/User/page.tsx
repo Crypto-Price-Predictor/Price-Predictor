@@ -10,6 +10,7 @@ import {
 import { Layout, Menu, theme, Switch } from "antd";
 import HomeContent from "./Home/page"; // Example component for Home
 import ListContent from "./portfolio/page"; // Example component for List
+import NewsPage from "./News/page";
 import type { MenuProps, MenuTheme } from "antd";
 import { getSession, useSession } from "next-auth/react";
 import { GetServerSidePropsContext } from "next";
@@ -27,11 +28,11 @@ const items2 = [
     icon: <LaptopOutlined />,
     label: "Portfolio",
   },
-  // {
-  //   key: '3',
-  //   icon: <NotificationOutlined />,
-  //   label: 'App',
-  // },
+  {
+    key: '3',
+    icon: <NotificationOutlined />,
+    label: 'News Feed',
+  },
   // {
   //   key: '4',
   //   icon: <LaptopOutlined />,
@@ -90,7 +91,7 @@ const AppLayout: React.FC = () => {
       case "2":
         return <ListContent value={value} />; // Render ListContent component
       case "3":
-        return <div>Laptop Content</div>; // Render AppContent component
+        return <NewsPage value={value}/>; // Render NewsPage Content component
       case "4":
         return <div>Laptop Content</div>; // You can replace this with a component
       case "5":
