@@ -127,7 +127,10 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
           <div className="flex-grow">
             {loading ? (
               <div className="flex justify-center items-center h-full p-56">
-                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                <div
+                  className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"
+                  role="status"
+                ></div>
               </div>
             ) : error ? (
               <p className="flex justify-center items-center text-red-500 p-56">

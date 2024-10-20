@@ -132,13 +132,18 @@ const App: React.FC = () => {
           <Button type="primary" htmlType="submit" aria-disabled={isLoading}>
             {isLoading ? (
               <Flex align="center" gap="middle">
-                <Spin indicator={<LoadingOutlined spin />} />
+                <Spin indicator={<LoadingOutlined spin role="status" />} />
               </Flex>
             ) : (
               "Submit"
             )}
           </Button>
-          <Button htmlType="button" onClick={onReset} aria-disabled={isLoading}>
+          <Button
+            htmlType="button"
+            onClick={onReset}
+            aria-disabled={isLoading}
+            role="button"
+          >
             Reset
           </Button>
           <Button

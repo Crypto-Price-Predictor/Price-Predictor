@@ -44,7 +44,10 @@ const LoginExpire: React.FC<loginExpireProps> = ({ isOpen }) => {
           <div className="flex flex-col items-center justify-center py-2">
             {confirmLoading ? (
               <div className="flex flex-col justify-center items-center">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                <div
+                  className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"
+                  role="status"
+                ></div>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center text-xl font-semibold">

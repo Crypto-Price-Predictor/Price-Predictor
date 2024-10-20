@@ -28,6 +28,10 @@ dataset = {
     'TRX': []
 }
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify(message="Welcome to the Flask API!"), 200
+
 @app.route('/predict', methods=['GET'])
 def predict():
     

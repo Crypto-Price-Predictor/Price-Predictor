@@ -9,7 +9,7 @@ interface loginButtonProps {
   name: string;
 }
 
-const loginButton: React.FC<loginButtonProps> = ({ name }) => {
+const LoginButton: React.FC<loginButtonProps> = ({ name }) => {
   //   const session = await getServerSession();
 
   //   const handleClick = () => {
@@ -32,4 +32,4 @@ const loginButton: React.FC<loginButtonProps> = ({ name }) => {
   );
 };
 
-export default loginButton;
+export default LoginButton;
