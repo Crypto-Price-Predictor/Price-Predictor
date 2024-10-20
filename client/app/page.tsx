@@ -1,5 +1,5 @@
 import Image from "next/image";
-import loginButton from "./components/loginButton";
+import LoginButton from "./components/LoginButton";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";

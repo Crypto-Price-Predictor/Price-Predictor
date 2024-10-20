@@ -18,6 +18,7 @@ const NavBar: React.FC<navBarProps> = ({ image }) => {
               // className="light:invert"
               width={250}
               height={40}
+              // role="img"
               priority
             />
           </a>
@@ -42,6 +43,7 @@ const NavBar: React.FC<navBarProps> = ({ image }) => {
                   layout="fill"
                   className="rounded-full"
                   objectFit="cover"
+                  role="img"
                   priority
                 />
               </div>

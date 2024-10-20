@@ -63,6 +63,8 @@ const AppLayout: React.FC = () => {
       setIsLoginExpired(true);
     } else if (session?.user?.image) {
       setImage(session.user.image || "");
+    } else {
+      setIsLoginExpired(false);
     }
   }, [session]);
 
@@ -116,7 +118,10 @@ const AppLayout: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center h-screen">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        <div
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"
+          role="status"
+        ></div>
       </div>
     );
   }
@@ -143,6 +148,7 @@ const AppLayout: React.FC = () => {
             onChange={changeTheme}
             checkedChildren="Dark"
             unCheckedChildren="Light"
+            aria-label="theme-switch"
           />
           <br />
           <br />
