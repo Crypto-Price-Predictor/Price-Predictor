@@ -79,6 +79,7 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
       </div>
     );
   }
+
   return (
     <div className="flex">
       <div
@@ -86,13 +87,13 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
           value ? "bg-black" : "bg-stone-50"
         } w-full ${iscreateOpen ? "hidden" : "block"}`}
       >
-        <h1
+        {/* <h1
           className={`${
             value ? "text-white" : "text-black"
           } align-middle text-center font-bold text-xl mb-2`}
         >
           My Portfolios
-        </h1>
+        </h1> */}
         <PortfolioList value={value} />
       </div>
       <CreatePortfolio isOpen={iscreateOpen} onClose={handleCancel} />

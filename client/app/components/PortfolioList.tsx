@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, List, Space, Collapse, Pagination } from "antd";
+import PortfolioMain from "./portfolioComponents/portfolioMain";
 
 interface listProps {
   value: boolean; // value true: dark mode, false: light mode
@@ -14,6 +15,8 @@ const data = Array.from({ length: 23 }).map((_, i) => ({
 }));
 
 const PortfolioList: React.FC<listProps> = ({ value }) => {
+  const [showPortfolio, setShowPortfolio] = useState(false);
+
   const backgroundColor = value ? "#1f1f1f" : "#fff"; // Dark mode: darker background
   const listBackground = value ? "#333" : "#fff"; // Dark mode for list background
   const borderColor = value ? "#555" : "#f0f0f0"; // Adjust border for dark/light mode
@@ -21,8 +24,22 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
   const linkColor = value ? "#4FC3F7" : "#007BFF"; // Blue tones for links
   const collapseContentBackground = value ? "#2e2e2e" : "#fafafa"; // Set collapse content background
 
+  const handleMoreClick = () => {
+    setShowPortfolio(true); // Set to show the ABC component
+  };
+
+  if (showPortfolio){
+    return <PortfolioMain />
+  }
   return (
     <>
+      <h1
+          className={`${
+            value ? "text-white" : "text-black"
+          } align-middle text-center font-bold text-xl mb-2`}
+        >
+          My Portfolios
+        </h1>
       <List
         itemLayout="horizontal"
         size="large"
@@ -63,6 +80,7 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
               </a>,
               <a
                 key="list-loadmore-more"
+                onClick={handleMoreClick}
                 style={{ color: linkColor }} // Blue tones for both themes
               >
                 more
