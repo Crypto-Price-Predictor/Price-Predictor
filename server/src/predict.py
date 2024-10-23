@@ -35,10 +35,10 @@ def predict():
     # joblib.dump(dataset[param1],f'../../server/data/{param1}.pkl')
     
     end_date = datetime.now()  # Current date
-    start_date = end_date - timedelta(days=4)  # 4 days before now
+    start_date = end_date - timedelta(days=358)  # 4 days before now
     
     if (end_date.hour <= 5):
-        start_date = end_date - timedelta(days=5)
+        start_date = end_date - timedelta(days=359)
         setHistory = True
 
     # Fetch data
@@ -47,7 +47,9 @@ def predict():
     
     # Get data from the request
     # dataset = data.values.astype('float64').reshape(-1,1)
-    actual = data.iloc[-4:].values.astype('float64').reshape(1, 4)
+    # actual = data.iloc[-4:].values.astype('float64').reshape(1, 4)
+    actual_dates = data.index[-358:].tolist() 
+    actual = data.iloc[-358:].values.astype('float64').reshape(1, 358)
     
     try:
         if param1 == 'BTC':
@@ -88,10 +90,16 @@ def predict():
 
         # Optionally save the updated history back to disk
         joblib.dump(history_dict[param1], f'../../server/history/{param1}.pkl')
+        future_dates = [(end_date + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(1, 8)]
+
+        if (end_date.hour <= 5):
+            future_dates = [(end_date + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(0, 7)]
 
         return jsonify({
             "future_predictions": future_predictions,
             "actual": actual,
+            "actual_dates": actual_dates[-358:],
+            "future_dates": future_dates,
             "history": history_dict[param1]})
     
     except Exception as e:
@@ -100,9 +108,9 @@ def predict():
 
 @app.route('/api', methods=['GET'])
 def get_dataframe():
-    # Example DataFrame
-    df = fetch_data_nlp()
-    
+   
+    # df = fetch_data_nlp() #####################uncomment this line and comment next line to fetch data from the web
+    df = pd.read_csv('../data/news.csv')
     # Convert DataFrame to JSON
     data_json = df.to_json(orient='records')
     return jsonify(data_json)

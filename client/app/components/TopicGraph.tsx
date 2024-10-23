@@ -4,6 +4,7 @@
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import React from "react";
+import { pred } from "../User/Home/page"; // Import the predicted values
 
 // Dynamically import ApexCharts with SSR disabled for Next.js compatibility
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -24,25 +25,50 @@ const TopicGraph: React.FC<TopicGraphProps> = ({
   categories,
   value,
 }) => {
+
+  const totalPoints = categories.length;
+  const defaultRange = totalPoints > 30 ? totalPoints - 30 : 0;
+
+  // Assume predicted values are stored in the "pred" array
+
   // Chart configuration options using ApexOptions type for type safety
   const options: ApexOptions = {
     chart: {
-      type: "area",
+      type: "line",
       zoom: {
-        enabled: false, // Enable zooming feature on the chart
+        enabled: true,
+        autoScaleYaxis:true // Enable zooming feature on the chart
       },
       height: 200,
     },
+    dataLabels: {
+    enabled: false, // Disable data labels
+  },
     xaxis: {
-      categories: categories, // Set the categories for the x-axis from props
+      categories: categories,
+      range: 30, // Set the default range to display the last 30 points
+      min: defaultRange, // Set the categories for the x-axis from props
     },
     stroke: {
       curve: "smooth", // Define the line curve as smooth
     },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'light',
+        type: "vertical",
+        shadeIntensity: 0.5,
+        gradientToColors: ['#90EE90', '#90EE90'], // Light green for shading
+        opacityFrom: 0.5,
+        opacityTo: 0.1,
+        stops: [0, 100],
+      },
+    },
     title: {},
     markers: {
-      size: 5, // Set the size of the markers on the chart
+      size: 2, // Set the size of the markers on the chart
     },
+    colors: ["#0000FF", "#90EE90", "#008000","#008000"],
     tooltip: {
       enabled: true, // Enable tooltips
       x: {

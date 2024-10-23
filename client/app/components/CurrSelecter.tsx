@@ -23,7 +23,7 @@ const CurrSelecter: React.FC<currSelecterProps> = ({ handleChange, value }) => {
           TRON (TRX)
         </option>
         {/* <option className="text-center">SOLANA (SOL) CMS</option> */}
-        <option className="text-center">Dogecoin (Doge)</option>
+        {/* <option className="text-center">Dogecoin (Doge)</option> */}
         <option className="text-center" value={"SHIB"}>
           Shiba-inu (SHIB)
         </option>

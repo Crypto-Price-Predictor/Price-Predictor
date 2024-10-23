@@ -49,6 +49,10 @@ def fetch_data_nlp():
 
     print(df)
 
+    df.to_csv('../data/news.csv', index=False)
+
+
     return df
 
-
+if __name__ == "__main__":
+    fetch_data_nlp()

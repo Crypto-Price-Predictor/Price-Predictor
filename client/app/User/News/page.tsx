@@ -60,26 +60,29 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
   if (loading) {
     return <div className={`${
       value ? 'text-white' : 'text-black'
-    }`}>Loading...</div>;
+    }`}>         <div className="flex justify-center items-center h-full p-56">
+    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+  </div></div>;
   }
 
   return (
-    // <div className="flex">
+    <div className="flex flex-wrap justify-center">
         <div className={`${
             value ? 'text-white' : 'text-black'
           } align-middle text-center font-bold text-xl mb-2`}>
       {/* <h1>Data from Flask API</h1> */}
+      
       <div className="text-lg font-serif font-normal">
-      <table className={ `min-w-full border-collapse border ${
+      <table className={ `min-w-full border-collapse  ${
   value ? 'bg-gray-800 text-white' : 'bg-white text-black'
 } shadow-lg` }>
         <thead>
           <tr>
             {/* <th>Ticker</th> */}
-            <th className="py-3 px-6 border-b">Date</th>
-            <th className="py-3 px-6 border-b">Time</th>
-            <th className="py-3 px-6 border-b">Title</th>
-            <th className="py-3 px-6 border-b">Compound</th>
+            <th className="py-3 px-6 font-bold">Date</th>
+            <th className="py-3 px-6 font-bold">Time</th>
+            <th className="py-3 px-6 font-bold">Title</th>
+            <th className="py-3 px-6 font-bold">Compound</th>
           </tr>
         </thead>
         <tbody>
@@ -87,16 +90,16 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
               data.map((item, index) => (
 
                <tr key={index}
-                className={`${
+                className={`bubble-container ${
                   index % 2 === 0 
-                  ? value ? "bg-gray-900" : "bg-gray-50"
-                  : value ? "bg-gray-800" : "bg-white"
+                  ? value ? "bg-black" : "bg-gray-50"
+                  : value ? "bg-[#000d1a]" : "bg-white"
                 } hover:bg-gray-100 transition duration-150`}>
                   {/* <td>{item.ticker}</td> */}
-                  <td className="py-3 px-6 border-b">{formatDate(item.date)}</td>
-                  <td className="py-3 px-6 border-b">{item.time !== 'N/A' ? item.time : 'N/A'}</td>
-                  <td className="py-3 px-6 border-b">{item.title}</td>
-                  <td className="py-3 px-6 border-b">{item.compound}</td>
+                  <td className="py-3 px-6 ">{formatDate(item.date)}</td>
+                  <td className="py-3 px-6 ">{item.time !== 'N/A' ? item.time : 'N/A'}</td>
+                  <td className="py-3 px-6 ">{item.title}</td>
+                  <td className="py-3 px-6 ">{item.compound}</td>
                 </tr>
           )) }
         </tbody>
@@ -104,7 +107,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
     </div>
 
 
-      // </div>
+   </div></div>
   );
 };
 
