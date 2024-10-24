@@ -5,25 +5,25 @@ from bs4 import BeautifulSoup
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 def fetch_data_nlp():
-    url =  'https://finviz.com/quote.ashx?t='	
-    tickers=['BITO','BTC','ETH']
+    url_api =  'https://finviz.com/quote.ashx?t='	
+    keys=['BITO','BTC','ETH']
     
-    news_tables = {}
-    for ticker in tickers:
-        url_final=url+ ticker
+    news_collection = {}
+    for key in keys:
+        url_final=url_api+ key
 
-        req = Request(url=url_final,headers={'user-agent': 'my-app'})	
-        response = urlopen(req)
+        file_request = Request(url=url_final,headers={'user-agent': 'my-app'})	
+        response_recieved = urlopen(file_request)
 
-        html = BeautifulSoup(response, 'html')
-        news_table=html.find(id='news-table')
-        news_tables[ticker]=news_table
+        data_html_components = BeautifulSoup(response_recieved, 'html')
+        chart_news=data_html_components.find(id='news-table')
+        news_collection[key]=chart_news
         # break
 
-    Parsed_data = []
+    tokenized_data = []
 
-    for ticker,news_table in news_tables.items():
-        for row in news_table.findAll('tr'):
+    for key,chart_news in news_collection.items():
+        for row in chart_news.findAll('tr'):
             # print (row)
             title=row.a.text
             time_stamp=row.td.text.split(' ')        
@@ -35,11 +35,11 @@ def fetch_data_nlp():
             else:           
                 date=time_stamp[0]
                 time=time_stamp[1]
-            Parsed_data.append([ticker,date,time,title])
+            tokenized_data.append([key,date,time,title])
 
 
 
-    df=pd.DataFrame(Parsed_data,columns=['ticker','date','time','title'])
+    df=pd.DataFrame(tokenized_data,columns=['key','date','time','title'])
 
     vader=SentimentIntensityAnalyzer()
 

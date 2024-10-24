@@ -30,6 +30,12 @@ const TopicGraph: React.FC<TopicGraphProps> = ({
   const defaultRange = totalPoints > 30 ? totalPoints - 30 : 0;
 
   // Assume predicted values are stored in the "pred" array
+  const modifiedSeries = series.map((item, index) => ({
+    ...item,
+    markers: {
+      size: index === 1 ? 0 : 2, // Assuming the predicted series is at index 1
+    },
+  }));
 
   // Chart configuration options using ApexOptions type for type safety
   const options: ApexOptions = {
@@ -51,6 +57,7 @@ const TopicGraph: React.FC<TopicGraphProps> = ({
     },
     stroke: {
       curve: "smooth", // Define the line curve as smooth
+      width: [2,2,2,2], // Set the width of the lines on the chart
     },
     fill: {
       type: 'gradient',
@@ -65,9 +72,9 @@ const TopicGraph: React.FC<TopicGraphProps> = ({
       },
     },
     title: {},
-    markers: {
-      size: 2, // Set the size of the markers on the chart
-    },
+    // markers: {
+    //   size: 2, // Set the size of the markers on the chart
+    // },
     colors: ["#0000FF", "#90EE90", "#008000","#008000"],
     tooltip: {
       enabled: true, // Enable tooltips

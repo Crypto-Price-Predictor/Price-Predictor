@@ -11,12 +11,6 @@ interface NewsPageProps {
   value: boolean;
 }
 
-// interface News {
-//   title: string;
-//   url: string;
-//   score: number;
-// }
-
 
 interface DataItem {
   ticker: string;
@@ -70,7 +64,6 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
         <div className={`${
             value ? 'text-white' : 'text-black'
           } align-middle text-center font-bold text-xl mb-2`}>
-      {/* <h1>Data from Flask API</h1> */}
       
       <div className="text-lg font-serif font-normal">
       <table className={ `min-w-full border-collapse  ${
@@ -78,7 +71,6 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
 } shadow-lg` }>
         <thead>
           <tr>
-            {/* <th>Ticker</th> */}
             <th className="py-3 px-6 font-bold">Date</th>
             <th className="py-3 px-6 font-bold">Time</th>
             <th className="py-3 px-6 font-bold">Title</th>
@@ -95,7 +87,6 @@ const NewsPage: React.FC<NewsPageProps> = ({ value }) => {
                   ? value ? "bg-black" : "bg-gray-50"
                   : value ? "bg-[#000d1a]" : "bg-white"
                 } hover:bg-gray-100 transition duration-150`}>
-                  {/* <td>{item.ticker}</td> */}
                   <td className="py-3 px-6 ">{formatDate(item.date)}</td>
                   <td className="py-3 px-6 ">{item.time !== 'N/A' ? item.time : 'N/A'}</td>
                   <td className="py-3 px-6 ">{item.title}</td>
