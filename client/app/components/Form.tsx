@@ -55,7 +55,7 @@ const App: React.FC = () => {
             const data = await res.json();
             // console.log("User created:", data);
             success("success", "User created successfully");
-            window.location.href = "/User/portfolio";
+            window.location.href = "/User";
           } else {
             console.error("Error creating user");
             success("error", "Error creating user");

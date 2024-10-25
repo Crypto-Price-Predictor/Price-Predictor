@@ -5,6 +5,8 @@ from model import create_model
 from datetime import datetime, timedelta
 import numpy as np # type: ignore
 import joblib # type: ignore
+from nlp import fetch_data_nlp
+import pandas as pd # type: ignore
 
 app = Flask(__name__)
 CORS(app)
@@ -35,29 +37,29 @@ def home():
 @app.route('/predict', methods=['GET'])
 def predict():
     
+    setHistory = False
     api_key = '89c98780049c75a3fd8b0eb86678497b7c1bdc79527b30b59ecdce5e583d6333'
     
     param1 = request.args.get('coin', type=str)
     history_dict[param1] = joblib.load(f'./history/{param1}.pkl')
-
-    history_set_dict = joblib.load(f'./history/set.pkl')
-    setHistory = history_set_dict[param1]['set']
+    # joblib.dump(dataset[param1],f'../../server/data/{param1}.pkl')
     
     end_date = datetime.now()  # Current date
-    start_date = end_date - timedelta(days=4)  # 4 days before now
+    start_date = end_date - timedelta(days=358)  # 4 days before now
     
     if (end_date.hour <= 5):
-        start_date = end_date - timedelta(days=5)
-        if (not setHistory) and (datetime.now().date() > history_set_dict[param1]['date'].date()):
-            setHistory = True
-            history_set_dict[param1]['date'] = datetime.now()
+        start_date = end_date - timedelta(days=359)
+        setHistory = True
 
     # Fetch data
     data = fetch_data(start_date, end_date, param1, api_key)
+    print(data.tail()) 
     
     # Get data from the request
     # dataset = data.values.astype('float64').reshape(-1,1)
-    actual = data.iloc[-4:].values.astype('float64').reshape(1, 4)
+    # actual = data.iloc[-4:].values.astype('float64').reshape(1, 4)
+    actual_dates = data.index[-358:].tolist() 
+    actual = data.iloc[-358:].values.astype('float64').reshape(1, 358)
     
     try:
         if param1 == 'BTC':
@@ -98,15 +100,30 @@ def predict():
 
         # Optionally save the updated history back to disk
         joblib.dump(history_dict[param1], f'./history/{param1}.pkl')
-        joblib.dump(history_set_dict, f'./history/set.pkl')
+        future_dates = [(end_date + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(1, 8)]
+
+        if (end_date.hour <= 5):
+            future_dates = [(end_date + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(0, 7)]
 
         return jsonify({
             "future_predictions": future_predictions,
             "actual": actual,
+            "actual_dates": actual_dates[-358:],
+            "future_dates": future_dates,
             "history": history_dict[param1]})
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/api', methods=['GET'])
+def get_dataframe():
+   
+    df = fetch_data_nlp() #####################uncomment this line and comment next line to fetch data from the web
+    df = pd.read_csv('./data/news.csv')
+    # Convert DataFrame to JSON
+    data_json = df.to_json(orient='records')
+    return jsonify(data_json)
         
 
 if __name__ == '__main__':

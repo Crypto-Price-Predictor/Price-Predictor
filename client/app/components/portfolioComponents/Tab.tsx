@@ -21,6 +21,7 @@ interface Transaction {
 interface TabProps {
   baseCurrency: string;
   rowkey: String;
+  value: boolean;
   transactions: Transaction[];
   portfolioDetails: any;
   series: {
@@ -97,6 +98,7 @@ const Tab: React.FC<TabProps> = ({
   baseCurrency,
   rowkey,
   transactions,
+  value,
   portfolioDetails,
   series,
   realized,
@@ -115,12 +117,19 @@ const Tab: React.FC<TabProps> = ({
 }) => {
   return (
     <div>
-      <div role="tablist" className="tabs tabs-boxed bg-black">
+      <div
+        role="tablist"
+        className={`tabs tabs-boxed ${
+          value ? "bg-black text-white" : "bg-white text-black"
+        }`}
+      >
         <input
           type="radio"
           name="my_tabs_1"
           role="tab"
-          className="tab"
+          className={`tab ${
+            value ? "bg-black text-white" : "bg-white text-black"
+          }`}
           aria-label="Edit"
         />
         <div role="tabpanel" className="tab-content p-10">
@@ -128,6 +137,7 @@ const Tab: React.FC<TabProps> = ({
             baseCurrency={baseCurrency}
             portfolioDetails={portfolioDetails}
             rowkey={rowkey}
+            value={value}
           />
         </div>
 
@@ -135,11 +145,16 @@ const Tab: React.FC<TabProps> = ({
           type="radio"
           name="my_tabs_1"
           role="tab"
-          className="tab"
+          className={`tab ${
+            value ? "bg-black text-white" : "bg-white text-black"
+          }`}
           aria-label="Visualize"
           defaultChecked
         />
-        <div role="tabpanel" className="tab-content p-5 bg-black">
+        <div
+          role="tabpanel"
+          className={`tab-content p-5 ${value ? "bg-black" : "bg-white"}`}
+        >
           <div className="flex flex-row w-full">
             <div className="w-1/3 p-2">
               <CurrentDetails
@@ -187,7 +202,9 @@ const Tab: React.FC<TabProps> = ({
           type="radio"
           name="my_tabs_1"
           role="tab"
-          className="tab"
+          className={`tab ${
+            value ? "bg-black text-white" : "bg-white text-black"
+          }`}
           aria-label="Recomendations"
         />
         <div role="tabpanel" className="tab-content p-10">

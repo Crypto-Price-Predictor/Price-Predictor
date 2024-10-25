@@ -26,12 +26,14 @@ interface byeSellProp {
   baseCurrency: String;
   rowkey: String;
   portfolioDetails: any;
+  value: boolean;
 }
 
 const ByeSell: React.FC<byeSellProp> = ({
   baseCurrency,
   rowkey,
   portfolioDetails,
+  value,
 }) => {
   const [activeButton, setActiveButton] = useState("buy");
 
@@ -144,7 +146,11 @@ const ByeSell: React.FC<byeSellProp> = ({
     <div>
       {contextHolder}
       <div className="flex w-full flex-col lg:flex-row">
-        <div className="card bg-black rounded-box grid h-full flex-grow place-items-center w-1/2">
+        <div
+          className={`card ${
+            value ? "bg-black text-white" : "bg-white text-black"
+          } rounded-box grid h-full flex-grow place-items-center w-1/2`}
+        >
           <div className="text-white w-full mr-10 gap-5">
             <div className="join grid grid-cols-2 mb-4">
               <button
@@ -167,7 +173,9 @@ const ByeSell: React.FC<byeSellProp> = ({
             </div>
 
             <select
-              className="bg-black focus:outline-none mb-4"
+              className={`${
+                value ? "bg-black text-white" : "bg-white text-black"
+              } focus:outline-none mb-4`}
               name="coin"
               onChange={handleInputChange}
             >
@@ -178,30 +186,66 @@ const ByeSell: React.FC<byeSellProp> = ({
               <option value={"GALA"}>GALA/USDT</option>
             </select>
 
-            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
-              <h1 className="text-center text-slate-400">Price (USDT)</h1>
+            <div
+              className={`${
+                value ? "bg-base-200" : "bg-slate-200 text-black"
+              } p-1 mb-4 rounded-xl w-full`}
+            >
+              <h1
+                className={`text-center ${
+                  value ? "text-slate-400" : "text-black"
+                }`}
+              >
+                Price (USDT)
+              </h1>
               <input
-                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
+                className={`w-full ${
+                  value ? "bg-base-200" : "bg-white text-black"
+                } text-center pt-1 text-xl focus:outline-none rounded-xl`}
                 name="price"
                 value={formValues.price}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
-              <h1 className="text-center text-slate-400">Amount</h1>
+            <div
+              className={`${
+                value ? "bg-base-200" : "bg-slate-200 text-black"
+              } p-1 mb-4 rounded-xl w-full`}
+            >
+              <h1
+                className={`text-center ${
+                  value ? "text-slate-400" : "text-black"
+                }`}
+              >
+                Amount
+              </h1>
               <input
-                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
+                className={`w-full ${
+                  value ? "bg-base-200" : "bg-white text-black"
+                } text-center pt-1 text-xl focus:outline-none rounded-xl`}
                 name="amount"
                 value={formValues.amount}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
-              <h1 className="text-center text-slate-400">Date</h1>
+            <div
+              className={`${
+                value ? "bg-base-200" : "bg-slate-200 text-black"
+              } p-1 mb-4 rounded-xl w-full`}
+            >
+              <h1
+                className={`text-center ${
+                  value ? "text-slate-400" : "text-black"
+                }`}
+              >
+                Date
+              </h1>
               <input
-                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
+                className={`w-full ${
+                  value ? "bg-base-200" : "bg-white text-black"
+                } text-center pt-1 text-xl focus:outline-none rounded-xl`}
                 placeholder="YYYY/MM/DD"
                 name="date"
                 value={formValues.date}
@@ -209,10 +253,22 @@ const ByeSell: React.FC<byeSellProp> = ({
               />
             </div>
 
-            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
-              <h1 className="text-center text-slate-400">Est. Fee</h1>
+            <div
+              className={`${
+                value ? "bg-base-200" : "bg-slate-200 text-black"
+              } p-1 mb-4 rounded-xl w-full`}
+            >
+              <h1
+                className={`text-center ${
+                  value ? "text-slate-400" : "text-black"
+                }`}
+              >
+                Est. Fee
+              </h1>
               <input
-                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
+                className={`w-full ${
+                  value ? "bg-base-200" : "bg-white text-black"
+                } text-center pt-1 text-xl focus:outline-none rounded-xl`}
                 name="fee"
                 value={formValues.fee}
                 onChange={handleInputChange}
@@ -221,7 +277,7 @@ const ByeSell: React.FC<byeSellProp> = ({
 
             <div className="flex justify-center items-center">
               <button
-                className="btn w-1/2 bg-gradient-to-r from-pink-600 to-purple-900"
+                className="btn w-1/2 bg-gradient-to-r from-pink-600 to-purple-900 text-white"
                 onClick={handleSubmit}
                 aria-disabled={isLoading}
               >
@@ -240,12 +296,17 @@ const ByeSell: React.FC<byeSellProp> = ({
           </div>
         </div>
         <div className="divider lg:divider-horizontal"></div>
-        <div className="card bg-black rounded-box grid h-full flex-grow place-items-center w-1/2">
+        <div
+          className={`card ${
+            value ? "bg-black" : "bg-white"
+          } rounded-box grid h-full flex-grow place-items-center w-1/2`}
+        >
           <PortfolioDetails
             baseCurrency={baseCurrency}
             transactions={trades}
             portfolioDetails={portfolioDetails}
             rowkey={rowkey}
+            value={value}
           />
         </div>
       </div>

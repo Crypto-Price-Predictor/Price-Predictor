@@ -8,6 +8,7 @@ interface PortfolioFetailsProp {
   transactions: any[];
   portfolioDetails: any;
   rowkey: String;
+  value: boolean;
 }
 
 const PortfolioDetails: React.FC<PortfolioFetailsProp> = ({
@@ -15,6 +16,7 @@ const PortfolioDetails: React.FC<PortfolioFetailsProp> = ({
   transactions,
   portfolioDetails,
   rowkey,
+  value,
 }) => {
   const portfolioName = portfolioDetails.name; // Default name value
 
@@ -69,13 +71,23 @@ const PortfolioDetails: React.FC<PortfolioFetailsProp> = ({
   };
 
   return (
-    <div>
+    <div className={`${value ? "bg-black text-white" : "bg-white text-black"}`}>
       {contextHolder}
-      <div className="flex flex-col  w-full">
-        <div className="flex flex-row w-full bg-base-200 p-1 h-full rounded-full">
+      <div
+        className={`flex flex-col  w-full ${
+          value ? "bg-black text-white" : "bg-white text-black"
+        }`}
+      >
+        <div
+          className={`flex flex-row w-full ${
+            value ? "bg-base-200" : "bg-slate-200 text-black"
+          } p-1 h-full rounded-full`}
+        >
           <input
             type="text"
-            className="w-full bg-base-200 rounded-full text-center text-slate-400 pt-1 text-2xl focus:outline-none"
+            className={`w-full rounded-full text-center ${
+              value ? "text-slate-400 bg-base-200" : "bg-white text-black"
+            } pt-1 text-2xl focus:outline-none`}
             value={name} // Bind the input value to the state `name`
             onChange={handleChange} // Handle change event
             disabled={isDisabled} // Set disabled state
@@ -84,7 +96,7 @@ const PortfolioDetails: React.FC<PortfolioFetailsProp> = ({
           {/* Button to toggle the disabled state */}
           {isDisabled ? (
             <button
-              className="btn bg-gradient-to-r from-pink-600 to-purple-900 rounded-full"
+              className="btn bg-gradient-to-r from-pink-600 to-purple-900 rounded-full text-white"
               onClick={toggleDisabled}
             >
               Edit
@@ -99,17 +111,23 @@ const PortfolioDetails: React.FC<PortfolioFetailsProp> = ({
           )}
         </div>
 
-        <label className="flex text-white pt-5">
+        <label className={`flex ${value ? "text-white" : "text-black"} pt-5`}>
           Created Date: {creaedDate.toString()}
         </label>
-        <label className="flex text-white">
+        <label className={`flex ${value ? "text-white" : "text-black"} pt-5`}>
           Last Modified Date: {lastDate.toString()}
         </label>
-        <label className="flex text-white pb-5">
+        <label className={`flex ${value ? "text-white" : "text-black"} pt-5`}>
           Base Currency: {baseCurrency.toString()}
         </label>
 
-        <h1 className="text-center text-white text-lg pb-1">History</h1>
+        <h1
+          className={`text-center ${
+            value ? "text-white" : "text-black"
+          } text-lg pb-1`}
+        >
+          History
+        </h1>
 
         <div className="h-64 p-4 bg-base-200 text-white rounded-3xl w-full">
           {/* Scrollable container */}

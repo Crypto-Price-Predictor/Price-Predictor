@@ -16,9 +16,10 @@ interface SeriesData {
 
 interface portfolioMainprops {
   rowkey: String;
+  value: boolean;
 }
 
-const PortfolioMain: React.FC<portfolioMainprops> = ({ rowkey }) => {
+const PortfolioMain: React.FC<portfolioMainprops> = ({ rowkey, value }) => {
   const baseCurrency = "USD";
 
   // const portfolioDetails = ["My Portfolio 1", "2024/06/09", "2024/10/10"];
@@ -401,11 +402,10 @@ const PortfolioMain: React.FC<portfolioMainprops> = ({ rowkey }) => {
         console.log(err);
       } finally {
         setIsLoading(false);
-        fetchtransaction();
       }
     };
     fetchPortfolioDetails();
-    // Run fetchTransaction every 60 seconds (60000 ms)
+    // Run fetchTransaction every 30 seconds (30000 ms)
     const interval = setInterval(fetchtransaction, 30000);
 
     // Run fetchTransaction immediately on component mount
@@ -428,6 +428,7 @@ const PortfolioMain: React.FC<portfolioMainprops> = ({ rowkey }) => {
       <Tab
         baseCurrency={baseCurrency}
         transactions={transaction}
+        value={value}
         portfolioDetails={portfolioDetails}
         series={asset}
         realized={realized}
