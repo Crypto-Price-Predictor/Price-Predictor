@@ -18,6 +18,8 @@ interface homeProps {
 interface PredictionResponse {
   future_predictions: number[][];
   actual: number[][];
+  actual_dates: string[];
+  future_dates: string[];
   history: number[];
 }
 
@@ -25,6 +27,8 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
   const [curr, setCurr] = useState("BTC");
   const [predictions, setPredictions] = useState<number[]>([]);
   const [history, setHistory] = useState<number[]>([]);
+  const [actual_dates, setActual_dates] = useState<string[]>([]);
+  const [future_dates, setFuture_dates] = useState<string[]>([]);
   const [actual, setActual] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +42,14 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
     });
   };
 
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "short",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   useEffect(() => {
     const fetchData = () => {
       setLoading(true); // Set loading to true at the start
@@ -48,6 +60,15 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
             `http://127.0.0.1:5000/predict?coin=${curr}`
           );
           setPredictions(response.data.future_predictions[0]);
+
+          const formattedActualDates =
+            response.data.actual_dates.map(formatDate);
+          const formattedFutureDates =
+            response.data.future_dates.map(formatDate);
+
+          setActual_dates(formattedActualDates || []);
+          setFuture_dates(formattedFutureDates || []);
+
           setActual(response.data.actual[0]);
           setHistory(response.data.history);
           success("success", "Data fetched successfully");
@@ -73,6 +94,12 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
     fetchData();
   }, [curr]);
 
+  const actual_last_value = [actual[actual.length - 1]];
+  console.log("actual_last_value", actual_last_value);
+  const pred = actual_last_value.concat(predictions);
+  const upperBound = pred.map((value: number) => value * 1.025); // +4%
+  const lowerBound = pred.map((value: number) => value * 0.975); // -4%
+
   const series = [
     {
       name: "Actual", // Name of the series
@@ -80,24 +107,23 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
     },
     {
       name: "Predict",
-      data: history.concat(predictions),
+      data: Array(357).fill(null).concat(pred),
+    },
+    {
+      name: "Upper Bound",
+      data: Array(357).fill(null).concat(upperBound),
+    },
+    {
+      name: "Lower Bound",
+      data: Array(357).fill(null).concat(lowerBound),
     },
   ];
 
   // Categories for the x-axis
-  const categories = [
-    "Day 1",
-    "Day 2",
-    "Day 3",
-    "Day 4",
-    "Day 5",
-    "Day 6",
-    "Day 7",
-    "Day 8",
-    "Day 9",
-    "Day 10",
-    "Day 11",
-  ];
+  const categories: string[] = actual_dates.concat(future_dates);
+  console.log("act_dat", actual_dates);
+  console.log("fut_dat", future_dates);
+  console.log("categories", categories);
 
   //AboutPred parameters
   const parameters = [

@@ -53,7 +53,7 @@ const PortfolioList: React.FC<listProps> = ({ value, data }) => {
   const [key, setKey] = useState<String>("");
 
   const backgroundColor = value ? "#1f1f1f" : "#fff"; // Dark mode: darker background
-  const listBackground = value ? "#333" : "#fff"; // Dark mode for list background
+  const listBackground = value ? "#333" : "#9999"; // Dark mode for list background
   const borderColor = value ? "#555" : "#f0f0f0"; // Adjust border for dark/light mode
   const textColor = value ? "#fff" : "#000"; // Dark mode: white, Light mode: black
   const linkColor = value ? "#4FC3F7" : "#007BFF"; // Blue tones for links
@@ -84,7 +84,7 @@ const PortfolioList: React.FC<listProps> = ({ value, data }) => {
   };
 
   if (showPortfolio) {
-    return <PortfolioMain rowkey={key} />;
+    return <PortfolioMain rowkey={key} value={value} />;
   }
   return (
     <>
@@ -180,7 +180,7 @@ const PortfolioList: React.FC<listProps> = ({ value, data }) => {
                 collapsible="header"
                 defaultActiveKey={["1"]}
                 style={{
-                  backgroundColor: backgroundColor, // Adjust collapse background
+                  backgroundColor: value ? "#1f1f1f" : "#fff", // Adjust collapse background
                   borderColor: borderColor, // Adjust border color
                   color: textColor,
                 }}
