@@ -1,44 +1,60 @@
-import React, { useState } from 'react';
-import { your } from './../../../.next/static/chunks/main-app';
-import PortfolioDetails from './PortfolioDetails'
+import React, { useEffect, useState } from "react";
+import PortfolioDetails from "./PortfolioDetails";
+import { NoticeType } from "antd/es/message/interface";
+import { Flex, message, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const getCurrentDate = (): string => {
   const today = new Date();
-  
+
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Month starts at 0, so add 1
-  const day = String(today.getDate()).padStart(2, '0'); // Get the day and pad with leading zero if needed
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Month starts at 0, so add 1
+  const day = String(today.getDate()).padStart(2, "0"); // Get the day and pad with leading zero if needed
 
   return `${year}/${month}/${day}`; // Return in YYYY/MM/DD format
 };
 
 interface Transaction {
-  type: 'buy' | 'sell';
+  type: "buy" | "sell";
   date: string;
   currency: string;
   amount: number;
   price: number;
 }
 
-interface byeSellProp{
-  baseCurrency: String,
-  transactions: Transaction[],
-  portfolioDetails: String[],
+interface byeSellProp {
+  baseCurrency: String;
+  rowkey: String;
+  portfolioDetails: any;
 }
 
-const ByeSell: React.FC<byeSellProp> = ({baseCurrency, transactions, portfolioDetails}) => {
-  const [activeButton, setActiveButton] = useState('buy');
+const ByeSell: React.FC<byeSellProp> = ({
+  baseCurrency,
+  rowkey,
+  portfolioDetails,
+}) => {
+  const [activeButton, setActiveButton] = useState("buy");
 
   const [formValues, setFormValues] = useState({
-    price: '',
-    amount: '',
+    price: "",
+    amount: "",
     date: getCurrentDate(),
-    fee: '0.00',
+    fee: "0.00",
+    coin: "BTC",
   });
 
-  const [showAlert, setShowAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [trades, setTrades] = useState<any[]>([]);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const handleInputChange = (e) => {
+  const success = (type: NoticeType, content: string) => {
+    messageApi.open({
+      type: type,
+      content: content,
+    });
+  };
+
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
@@ -46,127 +62,192 @@ const ByeSell: React.FC<byeSellProp> = ({baseCurrency, transactions, portfolioDe
     });
   };
 
-  const handleSubmit = (e) => {
+  const fetchtransaction = async () => {
+    try {
+      const res = await fetch(`/api/getTransaction?portfolioID=${rowkey}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setTrades(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    console.log(portfolioDetails);
+    fetchtransaction();
+  }, []);
+
+  const handleSubmit = (e: any) => {
     e.preventDefault();
-    
-    // Show the alert on submit
-    setShowAlert(true);
 
+    setIsLoading(true);
     // Hide the alert after 3 seconds
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 3000);
+    setTimeout(async () => {
+      try {
+        if (formValues.amount && formValues.price) {
+          const res = await fetch("/api/addTransaction", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: activeButton,
+              Portfolio: rowkey,
+              amount: formValues.amount,
+              price: formValues.price,
+              date: new Date(),
+              profit: 0,
+              coin: formValues.coin,
+            }),
+          });
+          console.log(res);
 
-    // Reset form values
-    setFormValues({
-      price: '',
-      amount: '',
-      date: getCurrentDate(),
-      fee: '0.00',
-    });
+          if (res.ok) {
+            const data = await res.json();
+            // console.log("User created:", data);
+            success("success", "Transaction added successfully");
+            setFormValues({
+              price: "",
+              amount: "",
+              date: getCurrentDate(),
+              fee: "0.00",
+              coin: "BTC",
+            });
+            fetchtransaction();
+          } else {
+            console.error("Error adding transaction");
+            success("error", "Error adding transaction");
+            setIsLoading(false);
+          }
+        } else {
+          console.error("Error adding transaction");
+          success("error", "Error adding transaction");
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 2000);
   };
 
   return (
     <div>
+      {contextHolder}
       <div className="flex w-full flex-col lg:flex-row">
         <div className="card bg-black rounded-box grid h-full flex-grow place-items-center w-1/2">
-          <div className='text-white w-full mr-10 gap-5'>
+          <div className="text-white w-full mr-10 gap-5">
             <div className="join grid grid-cols-2 mb-4">
               <button
-                className={`join-item btn btn-outline hover:bg-blue-500 hover:text-white ${activeButton === 'buy' ? 'bg-blue-500 text-white' : ''}`}
-                onClick={() => setActiveButton('buy')}
+                className={`join-item btn btn-outline hover:bg-blue-500 hover:text-white ${
+                  activeButton === "buy" ? "bg-blue-500 text-white" : ""
+                }`}
+                onClick={() => setActiveButton("buy")}
               >
                 Buy
               </button>
 
               <button
-                className={`join-item btn btn-outline hover:bg-red-500 hover:text-white ${activeButton === 'sell' ? 'bg-red-500 text-white' : ''}`}
-                onClick={() => setActiveButton('sell')}
+                className={`join-item btn btn-outline hover:bg-red-500 hover:text-white ${
+                  activeButton === "sell" ? "bg-red-500 text-white" : ""
+                }`}
+                onClick={() => setActiveButton("sell")}
               >
                 Sell
               </button>
             </div>
 
-            <select className="bg-black focus:outline-none mb-4">
-              <option>BTC/USDT</option>
-              <option>TRX/USDT</option>
-              <option>DOGE/USDT</option>
-              <option>ETH/USDT</option>
-              <option>GALA/USDT</option>
+            <select
+              className="bg-black focus:outline-none mb-4"
+              name="coin"
+              onChange={handleInputChange}
+            >
+              <option value={"BTC"}>BTC/USDT</option>
+              <option value={"TRX"}>TRX/USDT</option>
+              <option value={"DOGE"}>DOGE/USDT</option>
+              <option value={"ETH"}>ETH/USDT</option>
+              <option value={"GALA"}>GALA/USDT</option>
             </select>
 
-            <div className='bg-base-200 p-1 mb-4 rounded-xl w-full'>
-              <h1 className='text-center text-slate-400'>Price (USDT)</h1>
+            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
+              <h1 className="text-center text-slate-400">Price (USDT)</h1>
               <input
-                className='w-full bg-base-200 text-center pt-1 text-xl focus:outline-none'
+                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
                 name="price"
                 value={formValues.price}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className='bg-base-200 p-1 mb-4 rounded-xl w-full'>
-              <h1 className='text-center text-slate-400'>Amount</h1>
+            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
+              <h1 className="text-center text-slate-400">Amount</h1>
               <input
-                className='w-full bg-base-200 text-center pt-1 text-xl focus:outline-none'
+                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
                 name="amount"
                 value={formValues.amount}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className='bg-base-200 p-1 mb-4 rounded-xl w-full'>
-              <h1 className='text-center text-slate-400'>Date</h1>
+            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
+              <h1 className="text-center text-slate-400">Date</h1>
               <input
-                className='w-full bg-base-200 text-center pt-1 text-xl focus:outline-none'
-                placeholder='YYYY/MM/DD'
+                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
+                placeholder="YYYY/MM/DD"
                 name="date"
                 value={formValues.date}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className='bg-base-200 p-1 mb-4 rounded-xl w-full'>
-              <h1 className='text-center text-slate-400'>Est. Fee</h1>
+            <div className="bg-base-200 p-1 mb-4 rounded-xl w-full">
+              <h1 className="text-center text-slate-400">Est. Fee</h1>
               <input
-                className='w-full bg-base-200 text-center pt-1 text-xl focus:outline-none'
+                className="w-full bg-base-200 text-center pt-1 text-xl focus:outline-none"
                 name="fee"
                 value={formValues.fee}
                 onChange={handleInputChange}
               />
             </div>
 
-            <div className='flex justify-center items-center'>
-              <button className="btn w-1/2 bg-gradient-to-r from-pink-600 to-purple-900" onClick={handleSubmit}>Submit</button>
-            </div>
-
-            {/* Show success alert if showAlert is true */}
-            {showAlert && (
-              <div 
-                role="alert" 
-                className="alert alert-success mt-4 fixed top-4 left-1/2 transform -translate-x-1/2 w-72"
-                style={{ zIndex: 1000 }} // Ensure it's on top of the content
+            <div className="flex justify-center items-center">
+              <button
+                className="btn w-1/2 bg-gradient-to-r from-pink-600 to-purple-900"
+                onClick={handleSubmit}
+                aria-disabled={isLoading}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 shrink-0 stroke-current"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span>Succesfully add your trade to the portfolio!</span>
-              </div>
-            )}
+                {isLoading ? (
+                  <Flex align="center" gap="middle">
+                    <Spin
+                      indicator={<LoadingOutlined spin role="status" />}
+                      className="text-white"
+                    />
+                  </Flex>
+                ) : (
+                  "Submit"
+                )}
+              </button>
+            </div>
           </div>
         </div>
         <div className="divider lg:divider-horizontal"></div>
-        <div className="card bg-black rounded-box grid h-full flex-grow place-items-center w-1/2"><PortfolioDetails baseCurrency={baseCurrency} transactions={transactions} portfolioDetails={portfolioDetails}/></div>
+        <div className="card bg-black rounded-box grid h-full flex-grow place-items-center w-1/2">
+          <PortfolioDetails
+            baseCurrency={baseCurrency}
+            transactions={trades}
+            portfolioDetails={portfolioDetails}
+            rowkey={rowkey}
+          />
+        </div>
       </div>
     </div>
   );

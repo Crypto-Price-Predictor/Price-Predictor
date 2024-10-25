@@ -46,6 +46,7 @@ const App: React.FC = () => {
             body: JSON.stringify({
               name: form.getFieldValue("name"),
               userId: sessionStorage.getItem("userId"), // Get user ID from sessionStorage
+              Description: form.getFieldValue("Description"),
             }),
           });
           console.log(res);
@@ -92,13 +93,13 @@ const App: React.FC = () => {
       onSubmitCapture={onSubmit}
       name="control-hooks"
       onFinish={onFinish}
-      style={{ maxWidth: 600 }}
+      style={{ maxWidth: 800 }}
     >
       {contextHolder}
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="coin" label="Coin" rules={[{ required: true }]}>
+      <Form.Item name="coin" label="Base coin" rules={[{ required: true }]}>
         <Select
           placeholder="Select a option and change input text above"
           //   onChange={onGenderChange}
@@ -110,22 +111,11 @@ const App: React.FC = () => {
         </Select>
       </Form.Item>
       <Form.Item
-        noStyle
-        shouldUpdate={(prevValues, currentValues) =>
-          prevValues.gender !== currentValues.gender
-        }
+        label="Description"
+        name="Description"
+        // rules={[{ required: true, message: "Please input!" }]}
       >
-        {({ getFieldValue }) =>
-          getFieldValue("gender") === "other" ? (
-            <Form.Item
-              name="customizeGender"
-              label="Customize Gender"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-          ) : null
-        }
+        <Input.TextArea />
       </Form.Item>
       <Form.Item {...tailLayout}>
         <Space>

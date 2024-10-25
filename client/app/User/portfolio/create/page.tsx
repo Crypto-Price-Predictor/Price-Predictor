@@ -68,7 +68,7 @@ const page: React.FC<popupProps> = ({ isOpen, onClose }) => {
         confirmLoading={confirmLoading}
         onCancel={onClose}
       >
-        <section className="bg-white w-full h-36 rounded-2xl">
+        <section className="bg-white w-full h-fit rounded-2xl">
           <div className="items-center justify-center py-2 pl-px px-28">
             <App />
           </div>

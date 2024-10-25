@@ -1,21 +1,56 @@
-import React, { useState } from "react";
-import { Avatar, List, Space, Collapse, Pagination } from "antd";
+import React, { useEffect, useState } from "react";
+import { Avatar, List, Space, Collapse, Button, ConfigProvider } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import PortfolioMain from "./portfolioComponents/portfolioMain";
+import { createStyles } from "antd-style";
+import AddPortfolio from "./portfolioComponents/AddPortfolio";
 
 interface listProps {
   value: boolean; // value true: dark mode, false: light mode
+  data: any[];
 }
 
-const data = Array.from({ length: 23 }).map((_, i) => ({
-  title: `My Portfolio ${i}`,
-  avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-  description: `This is my Portfolio ${i}, created ${new Date().toLocaleDateString()}. Base currency USD`,
-  content:
-    "We supply a series of design principles, practical patterns, and high-quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+const useStyle = createStyles(({ prefixCls, css }) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(
+        .${prefixCls}-btn-dangerous
+      ) {
+      border-width: 0;
+
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: "";
+        background: linear-gradient(135deg, #6253e1, #04befe);
+        position: absolute;
+        inset: 0;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+  `,
 }));
 
-const PortfolioList: React.FC<listProps> = ({ value }) => {
+// const data = Array.from({ length: 23 }).map((_, i) => ({
+//   title: `My Portfolio ${i}`,
+//   avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
+//   description: `This is my Portfolio ${i}, created ${new Date().toLocaleDateString()}. Base currency USD`,
+//   content:
+//     "We supply a series of design principles, practical patterns, and high-quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+// }));
+
+const PortfolioList: React.FC<listProps> = ({ value, data }) => {
+  const { styles } = useStyle();
   const [showPortfolio, setShowPortfolio] = useState(false);
+  const [addPortfolio, setAddPortfolio] = useState(false);
+  const [key, setKey] = useState<String>("");
 
   const backgroundColor = value ? "#1f1f1f" : "#fff"; // Dark mode: darker background
   const listBackground = value ? "#333" : "#fff"; // Dark mode for list background
@@ -24,22 +59,57 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
   const linkColor = value ? "#4FC3F7" : "#007BFF"; // Blue tones for links
   const collapseContentBackground = value ? "#2e2e2e" : "#fafafa"; // Set collapse content background
 
-  const handleMoreClick = () => {
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      const userID = sessionStorage.getItem("userId"); // Retrieve userID from sessionStorage
+
+      if (!userID) {
+        console.error("User ID not found in session storage");
+        return;
+      }
+
+      const res = await fetch(`/api/getPortfolio?userID=${userID}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    };
+    fetchPortfolio();
+  }, []);
+
+  const handleMoreClick = (rowkey: String) => {
+    setKey(rowkey);
     setShowPortfolio(true); // Set to show the ABC component
   };
 
-  if (showPortfolio){
-    return <PortfolioMain />
+  if (showPortfolio) {
+    return <PortfolioMain rowkey={key} />;
   }
   return (
     <>
       <h1
-          className={`${
-            value ? "text-white" : "text-black"
-          } align-middle text-center font-bold text-xl mb-2`}
-        >
-          My Portfolios
-        </h1>
+        className={`${
+          value ? "text-white" : "text-black"
+        } align-middle text-center font-bold text-xl mb-2`}
+      >
+        My Portfolios
+      </h1>
+      <ConfigProvider
+        button={{
+          className: styles.linearGradientButton,
+        }}
+      >
+        <Space className=" flex items-center justify-end mb-4">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setAddPortfolio(true)}
+          >
+            Portfolio
+          </Button>
+        </Space>
+      </ConfigProvider>
       <List
         itemLayout="horizontal"
         size="large"
@@ -80,7 +150,7 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
               </a>,
               <a
                 key="list-loadmore-more"
-                onClick={handleMoreClick}
+                onClick={() => handleMoreClick(item.id)}
                 style={{ color: linkColor }} // Blue tones for both themes
               >
                 more
@@ -116,8 +186,8 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
                 }}
                 items={[
                   {
-                    key: "1",
-                    label: <a style={{ color: textColor }}>{item.title}</a>,
+                    key: item.id,
+                    label: <a style={{ color: textColor }}>{item.name}</a>,
                     children: (
                       <div
                         style={{
@@ -129,10 +199,14 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
                         }}
                       >
                         <List.Item.Meta
-                          avatar={<Avatar src={item.avatar} />}
+                          avatar={
+                            <Avatar
+                              src={`https://api.dicebear.com/7.x/miniavs/svg?seed=1`}
+                            />
+                          }
                           description={
                             <span style={{ color: textColor }}>
-                              {item.description}
+                              {item.Description}
                             </span>
                           }
                           style={{
@@ -149,6 +223,10 @@ const PortfolioList: React.FC<listProps> = ({ value }) => {
             </Space>
           </List.Item>
         )}
+      />
+      <AddPortfolio
+        isOpen={addPortfolio}
+        onClose={() => setAddPortfolio(false)}
       />
     </>
   );

@@ -1,12 +1,17 @@
 import React from "react";
 import Image from "next/image";
 import Dashboard from "./../User/page";
+import { signOut } from "next-auth/react";
 
 interface navBarProps {
   image: string;
 }
 
 const NavBar: React.FC<navBarProps> = ({ image }) => {
+  const logout = () => {
+    signOut({ redirect: true, callbackUrl: "/" });
+  };
+
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -59,7 +64,7 @@ const NavBar: React.FC<navBarProps> = ({ image }) => {
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <a onClick={logout}>Logout</a>
               </li>
             </ul>
           </div>
