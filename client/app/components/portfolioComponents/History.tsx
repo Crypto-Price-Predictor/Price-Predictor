@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import { format } from "date-fns";
+import React, { useState } from "react";
 
-interface Transaction {
-    [x: string]: any;
-    type: 'buy' | 'sell';
-    date: string;
-    currency: string;
-    amount: number;
-    price: number;
-  }
-
-interface HistoryProp{
-    baseCurrency: string,
-    transactions: Transaction[],
+interface HistoryProp {
+  baseCurrency: string;
+  transactions: any[];
 }
 
-const History: React.FC<HistoryProp> = ({baseCurrency, transactions}) => {
-
+const History: React.FC<HistoryProp> = ({ baseCurrency, transactions }) => {
   return (
     <div className="flex flex-col w-full border-2 bg-base-200 border-white p-5">
       <h1 className="text-white text-xl mb-4 pb-5">Transaction History</h1>
@@ -30,25 +21,43 @@ const History: React.FC<HistoryProp> = ({baseCurrency, transactions}) => {
               <th className="px-4 py-2 border-b border-gray-400">Type</th>
               <th className="px-4 py-2 border-b border-gray-400">Currency</th>
               <th className="px-4 py-2 border-b border-gray-400">Amount</th>
-              <th className="px-4 py-2 border-b border-gray-400">Price Per Unit ({baseCurrency})</th>
-              <th className="px-4 py-2 border-b border-gray-400">Total Price ({baseCurrency})</th>
+              <th className="px-4 py-2 border-b border-gray-400">
+                Price Per Unit ({baseCurrency})
+              </th>
+              <th className="px-4 py-2 border-b border-gray-400">
+                Total Price ({baseCurrency})
+              </th>
             </tr>
           </thead>
           <tbody>
             {transactions.map((transaction, index) => (
-              <tr key={index} className="bg-gray-700">
-                <td className="border-t border-gray-400 px-4 py-2">{transaction.date}</td>
+              <tr key={index} className="bg-gray-700 text-center">
+                <td className="border-t border-gray-400 px-4 py-2">
+                  {format(new Date(transaction.date), "yyyy-MM-dd")}
+                </td>
                 <td
                   className={`border-t border-gray-400 px-4 py-2 ${
-                    transaction.type === 'buy' ? 'text-green-500' : 'text-red-500'
+                    transaction.type === "buy"
+                      ? "text-green-500"
+                      : "text-red-500"
                   }`}
                 >
                   {transaction.type.toUpperCase()}
                 </td>
-                <td className="border-t border-gray-400 px-4 py-2">{transaction.currency}</td>
-                <td className="border-t border-gray-400 px-4 py-2">{transaction.amount}</td>
-                <td className="border-t border-gray-400 px-4 py-2">{transaction.price}</td>
-                <td className="border-t border-gray-400 px-4 py-2">{(transaction.price * transaction.amount).toFixed(2)}</td>
+                <td className="border-t border-gray-400 px-4 py-2">
+                  {transaction.coin}
+                </td>
+                <td className="border-t border-gray-400 px-4 py-2">
+                  {transaction.initial_amount}
+                </td>
+                <td className="border-t border-gray-400 px-4 py-2">
+                  {transaction.boughtPrice}
+                </td>
+                <td className="border-t border-gray-400 px-4 py-2">
+                  {(
+                    transaction.boughtPrice * transaction.initial_amount
+                  ).toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -70,6 +79,6 @@ const History: React.FC<HistoryProp> = ({baseCurrency, transactions}) => {
       `}</style>
     </div>
   );
-}
+};
 
 export default History;

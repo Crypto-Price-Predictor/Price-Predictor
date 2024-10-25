@@ -14,6 +14,7 @@ interface portfolioProps {
 const Portfolio: React.FC<portfolioProps> = ({ value }) => {
   const navigate = useRouter();
   const [userID, setUserID] = useState<string | null>(null);
+  const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [iscreateOpen, setIsCreateOpen] = useState(false);
   // const userID = sessionStorage?.getItem("userId");
@@ -33,19 +34,20 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
     const fetchPortfolio = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`/api/portfolio?userID=${userID}`, {
+        const res = await fetch(`/api/getPortfolio?userID=${userID}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
         const data = await res.json();
-        if (res.status === 404) {
+        if (res.status === 404 || data.length === 0) {
           // navigate.push("/User/portfolio/create");
           setIsCreateOpen(true);
           setIsLoading(false);
         } else {
           console.log("Portfolio details:", data); // Handle the portfolio details
+          setData(data);
           setIsLoading(false);
         }
       } catch (err) {
@@ -58,7 +60,6 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
     };
 
     if (userID) {
-      console.log(userID);
       fetchPortfolio();
     } else {
       if (!isLoading) {
@@ -69,6 +70,7 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
   }, [userID, navigate]);
 
   const handleCancel = () => {
+    sessionStorage.setItem("menu", "1");
     window.location.href = "/User";
   };
 
@@ -94,7 +96,7 @@ const Portfolio: React.FC<portfolioProps> = ({ value }) => {
         >
           My Portfolios
         </h1> */}
-        <PortfolioList value={value} />
+        <PortfolioList value={value} data={data} />
       </div>
       <CreatePortfolio isOpen={iscreateOpen} onClose={handleCancel} />
     </div>

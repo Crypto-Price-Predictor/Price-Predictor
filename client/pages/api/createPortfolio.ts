@@ -6,11 +6,12 @@ const prisma = new PrismaClient();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { name, userId } = req.body;
+      const { name, userId, Description } = req.body;
       const newUser = await prisma.portfolioUser.create({
         data: {
           name: name,
           User_ID: Number(userId),
+          Description: Description,
         },
       });
       res.status(200).json(newUser);

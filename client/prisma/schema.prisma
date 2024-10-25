@@ -22,16 +22,20 @@ model User {
 }
 
 model portfolioUser {
-  id      Int      @id @default(autoincrement())
-  name    String
-  owner   User     @relation(fields: [User_ID], references: [id], onDelete: Cascade)
-  User_ID Int
-  trades  trades[]
+  id           Int      @id @default(autoincrement())
+  name         String
+  owner        User     @relation(fields: [User_ID], references: [id], onDelete: Cascade)
+  User_ID      Int
+  Description  String   @default("")
+  createdDate  DateTime @default(now())
+  modifiedDate DateTime @default(now())
+  trades       trades[]
 }
 
 model trades {
   id             Int           @id @default(autoincrement())
   coin           String?
+  type           String
   initial_amount Decimal
   boughtPrice    Decimal
   date           DateTime

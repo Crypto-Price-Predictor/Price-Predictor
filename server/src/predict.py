@@ -38,9 +38,9 @@ def predict():
     api_key = '89c98780049c75a3fd8b0eb86678497b7c1bdc79527b30b59ecdce5e583d6333'
     
     param1 = request.args.get('coin', type=str)
-    history_dict[param1] = joblib.load(f'../../server/history/{param1}.pkl')
+    history_dict[param1] = joblib.load(f'./history/{param1}.pkl')
 
-    history_set_dict = joblib.load(f'../../server/history/set.pkl')
+    history_set_dict = joblib.load(f'./history/set.pkl')
     setHistory = history_set_dict[param1]['set']
     
     end_date = datetime.now()  # Current date
@@ -97,8 +97,8 @@ def predict():
             history_dict[param1].append(next_predicted_value)  # Add the new predicted value
 
         # Optionally save the updated history back to disk
-        joblib.dump(history_dict[param1], f'../../server/history/{param1}.pkl')
-        joblib.dump(history_set_dict, f'../../server/history/set.pkl')
+        joblib.dump(history_dict[param1], f'./history/{param1}.pkl')
+        joblib.dump(history_set_dict, f'./history/set.pkl')
 
         return jsonify({
             "future_predictions": future_predictions,

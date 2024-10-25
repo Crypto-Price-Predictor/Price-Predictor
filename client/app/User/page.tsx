@@ -74,10 +74,12 @@ const AppLayout: React.FC = () => {
     }
     setTimeout(() => {
       const value = sessionStorage.getItem("theme");
+      const menu = sessionStorage.getItem("menu") || "1";
       const Theme = value === "false" ? false : true;
       setValue(Theme);
       changeColor(Theme);
       setIsLoading(false);
+      setSelectedMenu(menu);
       // setImage(session?.user.image || "");
     }, 800);
   }, []);
@@ -113,6 +115,7 @@ const AppLayout: React.FC = () => {
 
   const handleMenuClick = (e: any) => {
     setSelectedMenu(e.key); // Update the selected menu state
+    sessionStorage.setItem("menu", e.key);
   };
 
   if (isLoading) {
@@ -155,7 +158,7 @@ const AppLayout: React.FC = () => {
           <Menu
             theme={theme}
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={[selectedMenu]}
             style={{
               height: "auto",
               borderRight: 2,
