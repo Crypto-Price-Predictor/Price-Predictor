@@ -5,11 +5,7 @@ interface stabilityProps {
 }
 
 const AboutStability: React.FC<stabilityProps> = ({ value }) => {
-  return (
-    <div className={`${value ? "text-white" : "text-black"}`}>
-      AboutStability
-    </div>
-  );
+  return <div className={`${value ? "text-white" : "text-black"}`}></div>;
 };
 
 export default AboutStability;

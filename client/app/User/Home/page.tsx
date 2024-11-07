@@ -126,12 +126,8 @@ const Dashboard: React.FC<homeProps> = ({ value }) => {
   console.log("categories", categories);
 
   //AboutPred parameters
-  const parameters = [
-    "Prediction accuracy (MSE)",
-    "Prediction Error (Presentage error)",
-    "Some other parameters",
-  ];
-  const values = ["0.2", "2.5%", "xxx"];
+  const parameters = ["Prediction Error (Presentage error)"];
+  const values = ["5.4%"];
 
   const handleCurrChange = async (curr: string) => {
     setCurr(curr);

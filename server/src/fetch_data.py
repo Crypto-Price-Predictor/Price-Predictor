@@ -42,7 +42,7 @@ def fetch_data(start_date, end_date, coin_id, api_key):
     # df = df[(df.index >= start_date) & (df.index <= end_date)]
 
     # Select only the closing price
-    daily_close = df[['close']]
+    daily_close = df
 
     return daily_close
 
