@@ -4,8 +4,8 @@ Price-Predictor is a web application that predicts cryptocurrency prices and man
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
+- [Project Structure](#getting-started)
+- [Getting Started](#project-structure)
 - [Environment Variables](#environment-variables)
 - [Scripts](#scripts)
 - [Features](#features)
