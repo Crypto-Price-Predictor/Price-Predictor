@@ -58,9 +58,10 @@ To get a local copy up and running, follow these steps:
 
 - **Clone the repository:**
 
-````bash
-git clone https://github.com/yourusername/price-predictor.git
-cd price-predictor
+  ```bash
+  git clone https://github.com/yourusername/price-predictor.git
+  cd price-predictor
+  ```
 
 ## Client Setup
 
@@ -68,14 +69,12 @@ cd price-predictor
 
    ```bash
    cd client
-
-````
+   ```
 
 2. **Install dependencies:**
 
    ```bash
    npm install
-
    ```
 
 3. **Set up environment variables:**
