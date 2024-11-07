@@ -26,22 +26,23 @@ Price-Predictor is a web application that predicts cryptocurrency prices and man
 
 ## Project Structure
 
-````plaintext
-Price-Predictor
-├── .venv # Virtual environment for server dependencies
-├── client # Frontend application using Next.js
-│ ├── app # Contains the main application pages and components
-│ ├── components # Reusable UI components
-│ ├── pages # API endpoints for the Next.js server
-│ ├── prisma # Database schema and migrations
-│ ├── public # Static assets (images, videos, etc.)
-│ └── **tests** # Unit tests for the frontend
-├── server # Backend application with ML models
-│ ├── data # Data files used in model training and predictions
-│ ├── models # Pre-trained models and scalers
-│ ├── src # Source files for data processing and model training
-│ └── test # Unit tests for backend functionality
-└── package-lock.json # Dependency lock file
+```plaintext
+   Price-Predictor
+   ├── .venv # Virtual environment for server dependencies
+   ├── client # Frontend application using Next.js
+   │ ├── app # Contains the main application pages and components
+   │ ├── components # Reusable UI components
+   │ ├── pages # API endpoints for the Next.js server
+   │ ├── prisma # Database schema and migrations
+   │ ├── public # Static assets (images, videos, etc.)
+   │ └── **tests** # Unit tests for the frontend
+   ├── server # Backend application with ML models
+   │ ├── data # Data files used in model training and predictions
+   │ ├── models # Pre-trained models and scalers
+   │ ├── src # Source files for data processing and model training
+   │ └── test # Unit tests for backend functionality
+   └── package-lock.json # Dependency lock file
+```
 
 ## Getting Started
 
@@ -56,10 +57,10 @@ To get a local copy up and running, follow these steps:
 ### Installation
 
 - **Clone the repository:**
-```bash
+
+````bash
 git clone https://github.com/yourusername/price-predictor.git
 cd price-predictor
-````
 
 ## Client Setup
 
@@ -68,7 +69,7 @@ cd price-predictor
    ```bash
    cd client
 
-   ```
+````
 
 2. **Install dependencies:**
 
