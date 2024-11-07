@@ -26,6 +26,7 @@ Price-Predictor is a web application that predicts cryptocurrency prices and man
 
 ## Project Structure
 
+````plaintext
 Price-Predictor
 ├── .venv # Virtual environment for server dependencies
 ├── client # Frontend application using Next.js
@@ -55,10 +56,10 @@ To get a local copy up and running, follow these steps:
 ### Installation
 
 - **Clone the repository:**
-  ```bash
-  git clone https://github.com/yourusername/price-predictor.git
-  cd price-predictor
-  ```
+```bash
+git clone https://github.com/yourusername/price-predictor.git
+cd price-predictor
+````
 
 ## Client Setup
 
@@ -115,7 +116,7 @@ To get a local copy up and running, follow these steps:
 
 5. **Run the server:**
    ```bash
-   python src/app.py  # Adjust as needed based on your server entry point
+   python src/predict.py  # Adjust as needed based on your server entry point
    ```
 
 ## Usage
@@ -143,7 +144,7 @@ To get a local copy up and running, follow these steps:
 
   ```
 
-- Ensure both client and server environments are set up properly to avoid issues during testing.
+Ensure both client and server environments are set up properly to avoid issues during testing.
 
 ## Technologies Used
 
