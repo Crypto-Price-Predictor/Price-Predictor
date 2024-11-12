@@ -151,7 +151,7 @@ Ensure both client and server environments are set up properly to avoid issues d
 
 - Frontend: Next.js, TypeScript, Ant Design
 - Backend: Python, Flask, Prisma
-- Database: SQLite (with Prisma ORM)
+- Database: SQLite, MySQL (with Prisma ORM)
 - Machine Learning: Scikit-Learn, TensorFlow/Keras (for model building and predictions)
 
 ## Contributing
